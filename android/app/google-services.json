@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "92652438405",
+    "project_id": "viacred-62ff6",
+    "storage_bucket": "viacred-62ff6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92652438405:android:d09ef54c23968ba7277aec",
+        "android_client_info": {
+          "package_name": "com.example.dash_board"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaLfOify6rO2yAxMN2qGW-bctZ3CjsUBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92652438405:android:b9022e25e65cda84277aec",
+        "android_client_info": {
+          "package_name": "com.example.viacred_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaLfOify6rO2yAxMN2qGW-bctZ3CjsUBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
