@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../controllers/dashboard_bar_graph_controller.dart';
 import '../utils/colors.dart';
 import '../utils/container_background.dart';
 
@@ -71,66 +73,108 @@ class _BuilderGraph extends StatelessWidget {
       child: SizedBox(
         height: (screenWidth > 600 ? screenHeight * 0.6 : screenHeight * 0.35),
         width: (screenWidth > 600 ? availableWidth * 1 : availableWidth * 1),
-        child: BarChart(
-          BarChartData(
-            alignment: BarChartAlignment.center,
-            maxY: 5.0,
-            groupsSpace: 40,
-            barGroups: _getBarGroups(screenWidth),
-            gridData: _grid(),
-            borderData: FlBorderData(
-              show: false,
+        child: LayoutBuilder(builder: (context, constraints) {
+          final barsSpace = 4 * constraints.maxWidth / 1300;
+          final barsSpaceGeneral = 16 * constraints.maxWidth;
+          final barsWidth = (11 * constraints.maxWidth / 160) / (1.5);
+
+          return BarChart(
+            BarChartData(
+              groupsSpace: barsSpaceGeneral,
+              alignment: BarChartAlignment.center,
+              maxY: 5.0,
+              gridData: _grid(),
+              borderData: FlBorderData(
+                show: false,
+              ),
+              titlesData: _titles(),
+              barTouchData: _touch(),
+              barGroups: _getBarGroups(
+                barsWidth,
+                barsSpace,
+                context,
+              ),
             ),
-            titlesData: _titles(),
-            barTouchData: _touch(),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
 }
 
-List<BarChartGroupData> _getBarGroups(double screenWidth) {
-  final color1 = ColorsHome().colorMap[15]!;
-  final color2 = ColorsHome().colorMap[16]!;
-  final color3 = ColorsHome().colorMap[13]!;
-  final nullColor = Colors.transparent;
+List<BarChartGroupData> _getBarGroups(
+  double barsWidth,
+  double barsSpace,
+  BuildContext context,
+) {
+  final state = Provider.of<DashboardState>(
+    context,
+    listen: false,
+  );
 
-  if (screenWidth > 600) {
+  if (MediaQuery.sizeOf(context).width < 728) {
     return [
-      _barGroup(0, 5, color1),
-      _barGroup(1, 3.5, color1),
-      _barGroup(2, 0.5, color1),
-      _barGroup(3, 0, nullColor), // Barra para dar espaço
-      _barGroup(4, 2.5, color2),
-      _barGroup(5, 1.5, color2),
-      _barGroup(6, 4, color2),
-      _barGroup(7, 0, nullColor), // Barra para dar espaço
-      _barGroup(8, 2.5, color3),
-      _barGroup(9, 1.5, color3),
-      _barGroup(10, 4, color3),
-    ];
-  } else {
-    return [
-      _barGroup(0, 5, color1),
-      _barGroup(1, 3.5, color1),
-      _barGroup(2, 0.5, color1),
+      if (state.companies.isNotEmpty)
+        for (final (i, it) in state.companies.first.rates.indexed)
+          BarChartGroupData(
+            x: i,
+            barsSpace: barsSpace,
+            barRods: [
+              BarChartRodData(
+                color: state.companies.first.color,
+                toY: it.value,
+                width: barsWidth,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8.0),
+                  topRight: Radius.circular(8.0),
+                ),
+              ),
+            ],
+          )
     ];
   }
-}
+  if (MediaQuery.sizeOf(context).width < 1000) {
+    return [
+      if (state.companies.length >= 2)
+        for (var index = 0; index < 2; index++)
+          for (final (i, it) in state.companies[index].rates.indexed)
+            BarChartGroupData(
+              x: i,
+              barsSpace: barsSpace,
+              barRods: [
+                BarChartRodData(
+                  color: state.companies[index].color,
+                  toY: it.value,
+                  width: barsWidth,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8.0),
+                    topRight: Radius.circular(8.0),
+                  ),
+                ),
+              ],
+            )
+    ];
+  }
 
-BarChartGroupData _barGroup(int x, double y, Color color) {
-  return BarChartGroupData(
-    x: x,
-    barRods: [
-      BarChartRodData(
-        toY: y,
-        color: color,
-        width: 40,
-        borderRadius: BorderRadius.circular(6),
-      ),
-    ],
-  );
+  return [
+    for (final (_, item) in state.companies.indexed)
+      for (final (i, it) in item.rates.indexed)
+        BarChartGroupData(
+          x: i,
+          barsSpace: barsSpace,
+          barRods: [
+            BarChartRodData(
+              color: item.color,
+              toY: it.value,
+              width: barsWidth,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(8.0),
+                topRight: Radius.circular(8.0),
+              ),
+            ),
+          ],
+        )
+  ];
 }
 
 FlGridData _grid() {
