@@ -94,7 +94,7 @@ class _CurveGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _ContainerBackground(0.4, 0.3, 1, 1);
+    return _ContainerBackground(0.8, 0.5, 1, 1);
   }
 }
 

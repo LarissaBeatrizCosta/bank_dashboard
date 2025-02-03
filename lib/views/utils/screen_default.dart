@@ -72,9 +72,11 @@ class _Body extends StatelessWidget {
     return Stack(
       children: [
         _ImageBackground(),
-        Container(
-          margin: EdgeInsets.all(20),
-          child: child,
+        SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.all(20),
+            child: child,
+          ),
         ),
       ],
     );
