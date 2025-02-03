@@ -103,7 +103,7 @@ class _BarGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _ContainerBackground(0.2, 0.28, 0.495, 1);
+    return _ContainerBackground(0.43, 0.28, 0.495, 1);
   }
 }
 
@@ -112,6 +112,6 @@ class _PieGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _ContainerBackground(0.2, 0.28, 0.495, 1);
+    return _ContainerBackground(0.43, 0.28, 0.495, 1);
   }
 }
