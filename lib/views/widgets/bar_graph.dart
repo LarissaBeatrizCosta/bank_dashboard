@@ -76,11 +76,7 @@ class _BuilderGraph extends StatelessWidget {
             alignment: BarChartAlignment.center,
             maxY: 5.0,
             groupsSpace: 40,
-            barGroups: [
-              _barGroup(0, 5),
-              _barGroup(1, 3.5),
-              _barGroup(2, 0.5),
-            ],
+            barGroups: _getBarGroups(screenWidth),
             gridData: _grid(),
             borderData: FlBorderData(
               show: false,
@@ -94,13 +90,42 @@ class _BuilderGraph extends StatelessWidget {
   }
 }
 
-BarChartGroupData _barGroup(int x, double y) {
+List<BarChartGroupData> _getBarGroups(double screenWidth) {
+  final color1 = ColorsHome().colorMap[15]!;
+  final color2 = ColorsHome().colorMap[12]!;
+  final color3 = ColorsHome().colorMap[13]!;
+  final nullColor = Colors.transparent;
+
+  if (screenWidth > 600) {
+    return [
+      _barGroup(0, 5, color1),
+      _barGroup(1, 3.5, color1),
+      _barGroup(2, 0.5, color1),
+      _barGroup(3, 0, nullColor), // Barra para dar espaço
+      _barGroup(4, 2.5, color2),
+      _barGroup(5, 1.5, color2),
+      _barGroup(6, 4, color2),
+      _barGroup(7, 0, nullColor), // Barra para dar espaço
+      _barGroup(8, 2.5, color3),
+      _barGroup(9, 1.5, color3),
+      _barGroup(10, 4, color3),
+    ];
+  } else {
+    return [
+      _barGroup(0, 5, color1),
+      _barGroup(1, 3.5, color1),
+      _barGroup(2, 0.5, color1),
+    ];
+  }
+}
+
+BarChartGroupData _barGroup(int x, double y, Color color) {
   return BarChartGroupData(
     x: x,
     barRods: [
       BarChartRodData(
         toY: y,
-        color: ColorsHome().colorMap[15],
+        color: color,
         width: 40,
         borderRadius: BorderRadius.circular(6),
       ),
