@@ -73,6 +73,7 @@ class _Body extends StatelessWidget {
       children: [
         _ImageBackground(),
         Container(
+          margin: EdgeInsets.all(20),
           child: child,
         ),
       ],
@@ -86,7 +87,6 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var nomeProvisorio = 'Nome provisório';
-    var screenWidth = MediaQuery.of(context).size.width;
     final style = TextStyle(
       fontSize: 14,
       color: ColorsHome().colorMap[11],

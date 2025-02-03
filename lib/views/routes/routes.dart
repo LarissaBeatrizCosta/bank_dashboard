@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../home_view.dart';
 import '../login_view.dart';
 
+// ignore: avoid_classes_with_only_static_members
 /// Gerencia rotas
 class Routes {
   ///Gerencia as rotas
