@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'firebase_options.dart';
+import 'i10/auth.dart';
 import 'views/home_view.dart';
 import 'views/routes/routes.dart';
 
@@ -14,6 +17,8 @@ late final FirebaseApp app;
 late final FirebaseAuth auth;
 
 void main() async{
+  Intl.defaultLocale = 'pt_BR';
+
   WidgetsFlutterBinding.ensureInitialized();
 
   app = await Firebase.initializeApp(
@@ -32,6 +37,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        FirebaseUILocalizations.withDefaultOverrides(const LabelOverrides()),
+        FirebaseUILocalizations.delegate,
+      ],
       debugShowCheckedModeBanner: false,
       title: 'Viacred Satisfaction',
       initialRoute: '/login',
