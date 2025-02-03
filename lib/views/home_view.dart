@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'utils/colors.dart';
 import 'utils/screen_default.dart';
 
@@ -29,15 +28,62 @@ class _Body extends StatelessWidget {
                   children: [
                     _CurveGraph(),
                   ],
-                )
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _BarGraph(),
+                    _PieGraph(),
+                  ],
+                ),
               ]
             : [
                 Column(
                   children: [
                     _CurveGraph(),
+                    _BarGraph(),
+                    _PieGraph(),
                   ],
-                )
+                ),
               ]),
+      ),
+    );
+  }
+}
+
+class _ContainerBackground extends StatelessWidget {
+  const _ContainerBackground(this.heightValueDesktop, this.heightValueMobile,
+      this.widthValueDesktop, this.widthValueMobile);
+
+  final double heightValueDesktop;
+  final double heightValueMobile;
+  final double widthValueDesktop;
+  final double widthValueMobile;
+
+  @override
+  Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+
+    var availableWidth = screenWidth - 40;
+
+    return Container(
+      margin: EdgeInsets.only(top: 5, bottom: 2),
+      height: (screenWidth > 600
+          ? screenHeight * heightValueDesktop
+          : screenHeight * heightValueMobile),
+      width: (screenWidth > 600
+          ? availableWidth * widthValueDesktop
+          : availableWidth * widthValueMobile),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: ColorsHome().colorMap[13] ?? Colors.grey,
+            blurRadius: 0.5,
+          ),
+        ],
+        color: ColorsHome().colorMap[11],
+        borderRadius: BorderRadius.circular(10),
       ),
     );
   }
@@ -48,23 +94,24 @@ class _CurveGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var screenWidth = MediaQuery.of(context).size.width;
-    var screenHeight = MediaQuery.of(context).size.height;
+    return _ContainerBackground(0.4, 0.3, 1, 1);
+  }
+}
 
-    var availableWidth = screenWidth - 40;
+class _BarGraph extends StatelessWidget {
+  const _BarGraph();
 
-    return Container(
-      height: (screenWidth > 600 ? screenHeight * 0.4 : screenHeight * 0.3),
-      width: (screenWidth > 600 ? availableWidth * 1 : availableWidth * 1),
-      decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: ColorsHome().colorMap[13] ?? Colors.grey,
-              blurRadius: 0.5,
-            ),
-          ],
-          color: ColorsHome().colorMap[11],
-          borderRadius: BorderRadius.circular(10)),
-    );
+  @override
+  Widget build(BuildContext context) {
+    return _ContainerBackground(0.2, 0.28, 0.495, 1);
+  }
+}
+
+class _PieGraph extends StatelessWidget {
+  const _PieGraph();
+
+  @override
+  Widget build(BuildContext context) {
+    return _ContainerBackground(0.2, 0.28, 0.495, 1);
   }
 }
