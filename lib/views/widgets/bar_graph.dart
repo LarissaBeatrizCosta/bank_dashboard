@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -68,53 +66,27 @@ class _BuilderGraph extends StatelessWidget {
     var screenHeight = MediaQuery.of(context).size.height;
     var availableWidth = screenWidth - 40;
 
-    final style = TextStyle(
-      color: Colors.white,
-      fontWeight: FontWeight.bold,
-    );
     return Padding(
       padding: const EdgeInsets.only(top: 30),
       child: SizedBox(
-        height: (screenWidth > 600 ? screenHeight * 0.6 : screenHeight * 0.2),
+        height: (screenWidth > 600 ? screenHeight * 0.6 : screenHeight * 0.35),
         width: (screenWidth > 600 ? availableWidth * 1 : availableWidth * 1),
         child: BarChart(
           BarChartData(
             alignment: BarChartAlignment.center,
             maxY: 5.0,
-            groupsSpace: 50,
+            groupsSpace: 40,
             barGroups: [
-              _BarGroup(3, 5),
-              _BarGroup(3, 5),
+              _barGroup(0, 5),
+              _barGroup(1, 3.5),
+              _barGroup(2, 0.5),
             ],
-            gridData: FlGridData(
-              drawHorizontalLine: true,
-              drawVerticalLine: false,
-              getDrawingHorizontalLine: (value) {
-                return FlLine(
-                  color: Colors.grey,
-                  strokeWidth: 0.8,
-                  dashArray: [6, 6],
-                );
-              },
-            ),
+            gridData: _grid(),
             borderData: FlBorderData(
               show: false,
             ),
-            barTouchData: BarTouchData(
-              touchTooltipData: BarTouchTooltipData(
-                tooltipPadding:
-                    EdgeInsets.only(top: 2, left: 9, right: 9),
-                getTooltipColor: (group) {
-                  return ColorsHome().colorMap[16] ?? Colors.green;
-                },
-                getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                  return BarTooltipItem(
-                    'Média: ${rod.toY}',
-                    style,
-                  );
-                },
-              ),
-            ),
+            titlesData: _titles(),
+            barTouchData: _touch(),
           ),
         ),
       ),
@@ -122,16 +94,95 @@ class _BuilderGraph extends StatelessWidget {
   }
 }
 
-BarChartGroupData _BarGroup(int x, double y) {
+BarChartGroupData _barGroup(int x, double y) {
   return BarChartGroupData(
     x: x,
     barRods: [
       BarChartRodData(
         toY: y,
-        color: ColorsHome().colorMap[16],
-        width: 18,
+        color: ColorsHome().colorMap[15],
+        width: 40,
         borderRadius: BorderRadius.circular(6),
       ),
     ],
+  );
+}
+
+FlGridData _grid() {
+  return FlGridData(
+    drawHorizontalLine: true,
+    drawVerticalLine: false,
+    getDrawingHorizontalLine: (value) {
+      return FlLine(
+        color: Colors.grey,
+        strokeWidth: 0.8,
+        dashArray: [6, 6],
+      );
+    },
+  );
+}
+
+FlTitlesData _titles() {
+  final styleBottomBar = TextStyle(
+    fontSize: 12,
+    color: ColorsHome().colorMap[17],
+  );
+
+  final textAmbient = 'Ambiente';
+  final textCollaborators = 'Colaboradores';
+  final textTime = 'Espera';
+  return FlTitlesData(
+    topTitles: AxisTitles(
+      sideTitles: SideTitles(
+        showTitles: false,
+      ),
+    ),
+    bottomTitles: AxisTitles(
+      sideTitles: SideTitles(
+        showTitles: true,
+        getTitlesWidget: (value, meta) {
+          switch (value.toInt()) {
+            case 0:
+              return Text(
+                textAmbient,
+                style: styleBottomBar,
+              );
+            case 1:
+              return Text(
+                textCollaborators,
+                style: styleBottomBar,
+              );
+            case 2:
+              return Text(
+                textTime,
+                style: styleBottomBar,
+              );
+            default:
+              return Text('');
+          }
+        },
+      ),
+    ),
+  );
+}
+
+BarTouchData _touch() {
+  final style = TextStyle(
+    color: ColorsHome().colorMap[11],
+    fontWeight: FontWeight.w500,
+  );
+  return BarTouchData(
+    touchTooltipData: BarTouchTooltipData(
+      tooltipPadding: EdgeInsets.only(top: 2, left: 9, right: 9),
+      getTooltipColor: (group) {
+        return ColorsHome().colorMap[15] ?? Colors.green;
+      },
+      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+        return BarTooltipItem(
+          'Média: ${rod.toY}',
+          style,
+        );
+      },
+    ),
   );
 }

@@ -95,7 +95,7 @@ class _Row extends StatelessWidget {
     );
 
     final text = Text(
-      'Bem vindo \n$nomeProvisorio',
+      'Bem vindo, \n$nomeProvisorio',
       textAlign: TextAlign.start,
       style: style,
     );
