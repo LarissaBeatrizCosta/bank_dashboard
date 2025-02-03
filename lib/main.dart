@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
   ///Key do app
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -42,7 +41,7 @@ class MyApp extends StatelessWidget {
         FirebaseUILocalizations.delegate,
       ],
       debugShowCheckedModeBanner: false,
-      title: 'Viacred Satisfaction',
+      title: 'Dashboard',
       initialRoute: '/login',
       onGenerateRoute: Routes.createRoutes,
       routes: {

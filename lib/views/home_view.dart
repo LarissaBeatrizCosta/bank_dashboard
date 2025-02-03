@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../controllers/home_controller.dart';
-
+import 'package:viacred_app/views/utils/screen_default.dart';
 
 ///Tela inicial
 class HomeView extends StatelessWidget {
@@ -11,10 +8,17 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => RateNumberController(),
-      child: Scaffold(),
-    );
+    return _Body();
   }
 }
 
+class _Body extends StatelessWidget {
+  const _Body();
+
+  @override
+  Widget build(BuildContext context) {
+    return ScreenDefault(
+      child: Column(),
+    );
+  }
+}
