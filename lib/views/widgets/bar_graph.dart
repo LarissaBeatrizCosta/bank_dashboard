@@ -92,7 +92,7 @@ class _BuilderGraph extends StatelessWidget {
 
 List<BarChartGroupData> _getBarGroups(double screenWidth) {
   final color1 = ColorsHome().colorMap[15]!;
-  final color2 = ColorsHome().colorMap[12]!;
+  final color2 = ColorsHome().colorMap[16]!;
   final color3 = ColorsHome().colorMap[13]!;
   final nullColor = Colors.transparent;
 
@@ -200,7 +200,7 @@ BarTouchData _touch() {
     touchTooltipData: BarTouchTooltipData(
       tooltipPadding: EdgeInsets.only(top: 2, left: 9, right: 9),
       getTooltipColor: (group) {
-        return ColorsHome().colorMap[15] ?? Colors.green;
+        return ColorsHome().colorMap[14] ?? Colors.green;
       },
       getTooltipItem: (group, groupIndex, rod, rodIndex) {
         return BarTooltipItem(
