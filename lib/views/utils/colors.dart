@@ -20,5 +20,6 @@ class ColorsHome {
     13: Color(0xFF023047),
     14: Colors.grey,
     15: Color(0xFFFFB703),
+    16: Color(0xFF5C8001),
   };
 }
