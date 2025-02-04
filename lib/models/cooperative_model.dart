@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'bar_model.dart';
-import 'rates_model.dart';
 
 ///Classe das filiais
 class CooperativeModel {

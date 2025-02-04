@@ -1,14 +1,9 @@
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../models/bar_model.dart';
-import '../models/cooperative_model.dart';
-import '../models/rates_model.dart';
 import '../models/user_model.dart';
-import '../views/utils/colors.dart';
 
 ///Classe que cuida do banco de dados
 class DataBaseController extends ChangeNotifier {
@@ -20,9 +15,6 @@ class DataBaseController extends ChangeNotifier {
 
   ///Tipo do gerente
   late final positionUser = user.position;
-
-  ///Lista de cooperativas
-  var cooperativesList = <CooperativeModel>[];
 
   ///Pega id do login
   Future<String> getUid() async {
@@ -54,7 +46,6 @@ class DataBaseController extends ChangeNotifier {
 
     if (userId.exists && userId.data() != null) {
       user = UserModel.fromMap(userId.data() as Map<String, dynamic>);
-      // getCooperatives();
     }
   }
 }
