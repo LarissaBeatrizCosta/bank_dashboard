@@ -1,3 +1,4 @@
+
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -5,8 +6,6 @@ import 'package:flutter/cupertino.dart';
 import '../models/bar_model.dart';
 import '../models/cooperative_model.dart';
 import '../views/utils/colors.dart';
-import 'db_controller.dart';
-
 ///Controller do grafico de barras
 class DashboardState extends ChangeNotifier {
   ///Construtor
@@ -14,16 +13,12 @@ class DashboardState extends ChangeNotifier {
     _init();
   }
 
-//TESTANDO BANCO
-  DataBaseController dbController = DataBaseController();
-
   final _companies = <CooperativeModel>[];
 
   ///Lista de filiais
   List<CooperativeModel> get companies => _companies;
 
-  void _init() async {
-    await dbController.getUser(); //TESTANDO BANCO
+  void _init() {
     final list = <BarModel>[];
     final list2 = <BarModel>[];
     final list3 = <BarModel>[];
@@ -44,7 +39,7 @@ class DashboardState extends ChangeNotifier {
         ),
       );
     }
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i <3; i++) {
       final random = Random();
       final randomNumber = random.nextInt(5);
       final type = random.nextInt(3);
@@ -74,17 +69,17 @@ class DashboardState extends ChangeNotifier {
       [
         CooperativeModel(
           idCity: 1,
-          rates: [],
+          rates: list,
           color: color1,
         ),
         CooperativeModel(
           idCity: 2,
-          rates: [],
+          rates: list2,
           color: color2,
         ),
         CooperativeModel(
           idCity: 3,
-          rates: [],
+          rates: list3,
           color: color3,
         ),
       ],

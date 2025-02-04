@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'bar_model.dart';
 import 'rates_model.dart';
 
 ///Classe das filiais
@@ -14,7 +15,7 @@ class CooperativeModel {
   final int idCity;
 
   ///Notas da filial
-  final List<RatesModel> rates;
+  final List<BarModel> rates;
 
   ///Cor da barra do gráfico
   final Color color;

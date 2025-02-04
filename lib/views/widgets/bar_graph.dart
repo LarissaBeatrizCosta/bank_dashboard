@@ -122,7 +122,7 @@ List<BarChartGroupData> _getBarGroups(
             barRods: [
               BarChartRodData(
                 color: state.companies.first.color,
-                toY: 2, //it.value
+                toY: it.value,
                 width: barsWidth,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(8.0),
@@ -144,7 +144,7 @@ List<BarChartGroupData> _getBarGroups(
               barRods: [
                 BarChartRodData(
                   color: state.companies[index].color,
-                  toY: 2,//it.value
+                  toY: it.value,
                   width: barsWidth,
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(8.0),
@@ -165,7 +165,7 @@ List<BarChartGroupData> _getBarGroups(
           barRods: [
             BarChartRodData(
               color: item.color,
-              toY: 2,//it.value
+              toY: it.value,
               width: barsWidth,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(8.0),
