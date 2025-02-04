@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../models/cooperative_model.dart';
 import '../models/rates_model.dart';
 import '../models/user_model.dart';
-import '../views/utils/colors.dart';
 
 ///Classe que cuida do banco de dados
 class DataBaseController extends ChangeNotifier {
@@ -19,10 +18,10 @@ class DataBaseController extends ChangeNotifier {
   late final positionUser = user.position;
 
   ///Lista de cooperativas
-  var cooperativesList = <CooperativeModel>[];
+  List<CooperativeModel> cooperativesList = <CooperativeModel>[];
 
   ///Lista de avaliações
-  var ratesList = <RatesModel>[];
+  List<RatesModel> ratesList = <RatesModel>[];
 
   ///Pega id do login
   Future<String> getUid() async {
@@ -69,13 +68,8 @@ class DataBaseController extends ChangeNotifier {
       listCollaboratorValue.add(item.collaboratorValue);
       listTimeValue.add(item.timeValue);
     }
-    double locationAvarege = calculateMedia(listLocationValue);
-    double collaboratorAvarege = calculateMedia(listCollaboratorValue);
-    double timeAvarege = calculateMedia(listTimeValue);
-
-    print(' LOCALIZAÇÃO: $locationAvarege');
-    // print(collaboratorAvarege);
-    // print(timeAvarege);
+    var locationAvarege = calculateMedia(listLocationValue);
+    debugPrint(' LOCALIZAÇÃO: $locationAvarege');
   }
 
   ///Calcula media
