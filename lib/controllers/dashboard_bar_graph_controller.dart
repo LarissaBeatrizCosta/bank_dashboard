@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 
-import '../models/company_model.dart';
-import '../models/dashboard_rates.dart';
+import '../models/bar_model.dart';
+import '../models/cooperative_model.dart';
 import '../views/utils/colors.dart';
 import 'db_controller.dart';
 
@@ -17,16 +17,16 @@ class DashboardState extends ChangeNotifier {
 //TESTANDO BANCO
   DataBaseController dbController = DataBaseController();
 
-  final _companies = <Company>[];
+  final _companies = <CooperativeModel>[];
 
   ///Lista de filiais
-  List<Company> get companies => _companies;
+  List<CooperativeModel> get companies => _companies;
 
   void _init() async {
     await dbController.getUser(); //TESTANDO BANCO
-    final list = <DashboardRate>[];
-    final list2 = <DashboardRate>[];
-    final list3 = <DashboardRate>[];
+    final list = <BarModel>[];
+    final list2 = <BarModel>[];
+    final list3 = <BarModel>[];
 
     final color1 = ColorsHome().colorMap[15]!;
     final color2 = ColorsHome().colorMap[16]!;
@@ -38,7 +38,7 @@ class DashboardState extends ChangeNotifier {
       final type = random.nextInt(3);
 
       list.add(
-        DashboardRate(
+        BarModel(
           value: randomNumber.toDouble(),
           type: RateType.values[type],
         ),
@@ -50,7 +50,7 @@ class DashboardState extends ChangeNotifier {
       final type = random.nextInt(3);
 
       list2.add(
-        DashboardRate(
+        BarModel(
           value: randomNumber.toDouble(),
           type: RateType.values[type],
         ),
@@ -63,7 +63,7 @@ class DashboardState extends ChangeNotifier {
       final type = random.nextInt(3);
 
       list3.add(
-        DashboardRate(
+        BarModel(
           value: randomNumber.toDouble(),
           type: RateType.values[type],
         ),
@@ -72,19 +72,19 @@ class DashboardState extends ChangeNotifier {
 
     _companies.addAll(
       [
-        Company(
-          name: 'Brusque',
-          rates: list,
+        CooperativeModel(
+          idCity: 1,
+          rates: [],
           color: color1,
         ),
-        Company(
-          name: 'Gaspar',
-          rates: list2,
+        CooperativeModel(
+          idCity: 2,
+          rates: [],
           color: color2,
         ),
-        Company(
-          name: 'Blumenau',
-          rates: list3,
+        CooperativeModel(
+          idCity: 3,
+          rates: [],
           color: color3,
         ),
       ],

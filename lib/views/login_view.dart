@@ -12,6 +12,7 @@ class LoginView extends StatefulWidget {
   @override
 
   ///Construtor
+  // ignore: library_private_types_in_public_api
   _LoginViewState createState() => _LoginViewState();
 }
 

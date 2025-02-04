@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ///Cores utilizadas na homeView
 class ColorsHome {
-  ///Cores da ratebar
+  ///Cores
   final Map<int, Color> colorMap = {
     0: Colors.brown[600]!,
     1: Colors.red[900]!,
@@ -22,5 +22,14 @@ class ColorsHome {
     15: Color(0xFFFFB703),
     16: Color(0xFF5C8001),
     17: Colors.black,
+  };
+
+  ///Cores das barras
+  final Map<int, Color> colorBar = {
+    1: Color(0xFF023047),
+    2: Color(0xFFFFB703),
+    3: Color(0xFF5C8001),
+    4: Colors.red[900]!,
+    5: Colors.amber,
   };
 }
