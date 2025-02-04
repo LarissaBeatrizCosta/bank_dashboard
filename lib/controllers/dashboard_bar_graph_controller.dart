@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -6,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import '../models/company_model.dart';
 import '../models/dashboard_rates.dart';
 import '../views/utils/colors.dart';
+import 'db_controller.dart';
+
 ///Controller do grafico de barras
 class DashboardState extends ChangeNotifier {
   ///Construtor
@@ -13,12 +14,16 @@ class DashboardState extends ChangeNotifier {
     _init();
   }
 
+//TESTANDO BANCO
+  DataBaseController dbController = DataBaseController();
+
   final _companies = <Company>[];
 
   ///Lista de filiais
   List<Company> get companies => _companies;
 
-  void _init() {
+  void _init() async {
+    await dbController.getUser(); //TESTANDO BANCO
     final list = <DashboardRate>[];
     final list2 = <DashboardRate>[];
     final list3 = <DashboardRate>[];
@@ -39,7 +44,7 @@ class DashboardState extends ChangeNotifier {
         ),
       );
     }
-    for (var i = 0; i <3; i++) {
+    for (var i = 0; i < 3; i++) {
       final random = Random();
       final randomNumber = random.nextInt(5);
       final type = random.nextInt(3);
@@ -78,7 +83,7 @@ class DashboardState extends ChangeNotifier {
           color: color2,
         ),
         Company(
-          name: 'Brumenau',
+          name: 'Blumenau',
           rates: list3,
           color: color3,
         ),
