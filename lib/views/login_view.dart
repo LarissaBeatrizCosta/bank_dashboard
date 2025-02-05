@@ -2,6 +2,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/bar_model.dart';
 import 'utils/constants.dart';
 
 ///Tela de login
@@ -53,6 +54,10 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final providers = [EmailAuthProvider()];
+
+
+
+
 
     return SignInScreen(
       sideBuilder: (context, constraints) {

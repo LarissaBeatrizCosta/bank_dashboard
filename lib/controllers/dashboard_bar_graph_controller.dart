@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 
+import '../models/bar_model.dart';
 import '../models/cooperative_model.dart';
 import 'db_controller.dart';
 
@@ -18,7 +19,6 @@ class DashboardState extends ChangeNotifier {
   List<CooperativeModel> get companies => _companies;
 
 
-
   // PRECISA DOCUMENTAR
   bool get isLoading => _isLoading;
 
@@ -26,6 +26,7 @@ class DashboardState extends ChangeNotifier {
   DataBaseController dbController = DataBaseController();
 
   Future<void> _init() async {
+
     await dbController.getUser();
 
     final list = await dbController.getCooperatives();

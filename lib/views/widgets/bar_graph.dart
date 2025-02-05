@@ -89,7 +89,7 @@ class _BuilderGraph extends StatelessWidget {
                 show: false,
               ),
               titlesData: _titles(),
-              barTouchData: _touch(),
+              barTouchData: _touch(context),
               barGroups: _getBarGroups(
                 barsWidth,
                 barsSpace,
@@ -236,11 +236,14 @@ FlTitlesData _titles() {
   );
 }
 
-BarTouchData _touch() {
+BarTouchData _touch(BuildContext context) {
   final style = TextStyle(
     color: ColorsHome.colorMap[11],
     fontWeight: FontWeight.w500,
   );
+  final state = Provider.of<DashboardState>(context);
+
+
   return BarTouchData(
     touchTooltipData: BarTouchTooltipData(
       tooltipPadding: EdgeInsets.only(top: 2, left: 9, right: 9),
@@ -248,8 +251,11 @@ BarTouchData _touch() {
         return ColorsHome.colorMap[14] ?? Colors.green;
       },
       getTooltipItem: (group, groupIndex, rod, rodIndex) {
+        final item =state.companies[rodIndex];
+
         return BarTooltipItem(
-          'Média: ${rod.toY}',
+          'Média: ${rod.toY}\n'
+              '${item.rates}',
           style,
         );
       },

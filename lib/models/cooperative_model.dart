@@ -8,10 +8,13 @@ class CooperativeModel {
     required this.idCity,
     required this.rates,
     required this.color,
+    required this.name,
   });
 
   ///nome da filial
   final int idCity;
+
+  final String name;
 
   ///Notas da filial
   final List<BarModel> rates;
