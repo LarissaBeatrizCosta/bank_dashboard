@@ -5,8 +5,10 @@ import 'colors.dart';
 
 ///Button que abre modal de filtros
 class Filters extends StatelessWidget {
+  ///Construtor
   Filters({super.key});
 
+  ///Texto do button
   final text = Text(
     'Filtros',
     style: TextStyle(
@@ -15,6 +17,7 @@ class Filters extends StatelessWidget {
     ),
   );
 
+  ///Estilo do button
   final style = TextButton.styleFrom(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12),
@@ -96,14 +99,14 @@ class _SizedBox extends StatelessWidget {
                 icon: Icons.calendar_today,
                 text: 'Período',
                 listItem: [],
-                fuction: (newValue) {},
+                onChange: (_) {},
               ),
               _DropDown(
                 icon: Icons.business,
                 text: 'Agência',
                 listItem: cooperatives,
-                fuction: (newValue) {
-                  filterController.updateCooperativeSelected(newValue);
+                onChange: (item) {
+                  filterController.getCooperativeId(item);
                 },
               ),
             ],
@@ -118,13 +121,13 @@ class _DropDown extends StatelessWidget {
   const _DropDown({
     required this.icon,
     required this.text,
-    required this.fuction,
+    required this.onChange,
     required this.listItem,
   });
 
   final IconData icon;
   final String text;
-  final Function fuction;
+  final ValueChanged<dynamic>? onChange;
   final List<DropdownMenuItem> listItem;
 
   @override
@@ -158,9 +161,7 @@ class _DropDown extends StatelessWidget {
             style: style,
           ),
           items: listItem,
-          onChanged: (_) {
-            fuction;
-          },
+          onChanged: onChange,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
             border: OutlineInputBorder(

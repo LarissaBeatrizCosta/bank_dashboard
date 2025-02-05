@@ -33,8 +33,10 @@ class FilterController extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  //TODO: VER PORQUE ATUALIZA O DROPDOWN SEM CHMAR ATUALIZAÇÃO
   ///Atualiza cooperativa selecionada
-  void updateCooperativeSelected(String? newvalue) {
+  void updateCooperativeSelected(String newvalue) async {
     cooperativeSelected = newvalue;
     notifyListeners();
   }
@@ -53,5 +55,10 @@ class FilterController extends ChangeNotifier {
             style: style,
           ));
     }).toList();
+  }
+
+  ///Chama no banco para pegar cooperativa
+  Future<void> getCooperativeId(String id) async {
+    await dbController.getByIdCooperative(id);
   }
 }

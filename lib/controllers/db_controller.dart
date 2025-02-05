@@ -16,7 +16,7 @@ class DataBaseController {
   late UserModel user;
 
   ///Nome do gerente
-  late final nameUser;
+  late final String nameUser;
 
   ///Tipo do gerente
   late final positionUser = user.position;
@@ -123,16 +123,11 @@ class DataBaseController {
   }
 
   Future<void> _getMainManagerCompanies(
-    int index,
-    QueryDocumentSnapshot<Map<String, dynamic>> item,
-  ) async {
+      int index, QueryDocumentSnapshot<Map<String, dynamic>> item) async {
     final cooperative = item;
 
-    final ratesCollection = await cooperative.reference
-        .collection(
-          'rates',
-        )
-        .get();
+    final ratesCollection =
+        await cooperative.reference.collection('rates').get();
 
     final ratesList = <RatesModel>[];
 
@@ -152,5 +147,27 @@ class DataBaseController {
     );
 
     cooperativesList.add(company);
+  }
+
+  ///Função que pega especificamente uma cooperativa
+  Future<void> getByIdCooperative(String id) async {
+    final cooperativeId = await db.collection('cooperatives').doc(id).get();
+    final ratesCollection =
+        await cooperativeId.reference.collection('rates').get();
+    final ratesList = <RatesModel>[];
+
+    for (final rate in ratesCollection.docs) {
+      final rateModel = RatesModel.fromMap(rate.data());
+      ratesList.add(rateModel);
+    }
+    final rates = await calculateAverage(ratesList);
+
+    final company = CooperativeModel(
+      idCooperative: cooperativeId.id,
+      name: cooperativeId['name'],
+      idCity: cooperativeId['idCity'],
+      rates: rates,
+      color: ColorsHome.colorMap[13] ?? Color(0xFF023047),
+    );
   }
 }
