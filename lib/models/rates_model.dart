@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 ///Classe das avaliações
 class RatesModel {
   ///Construtor
@@ -27,12 +29,10 @@ class RatesModel {
   final double numberRate;
 
   ///Data
-  final String time;
+  final Timestamp time;
 
   ///Nota sobre tempo de espera
   final double timeValue;
-
-
 
   ///Map em model
   factory RatesModel.fromMap(Map<String, dynamic> map) {

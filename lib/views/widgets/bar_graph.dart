@@ -54,8 +54,45 @@ class _TitleGraph extends StatelessWidget {
             ],
           ),
         ),
+        _Filters(),
         _BuilderGraph(),
       ],
+    );
+  }
+}
+
+class _Filters extends StatelessWidget {
+  _Filters();
+
+  final text = Text(
+    'Filtros',
+    style: TextStyle(
+      fontSize: 14,
+      color: ColorsHome.colorMap[17],
+    ),
+  );
+
+  final style = TextButton.styleFrom(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    side: BorderSide(
+      color: ColorsHome.colorMap[13] ?? Colors.grey,
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 20),
+        child: TextButton(
+          style: style,
+          onPressed: () {},
+          child: text,
+        ),
+      ),
     );
   }
 }
@@ -243,7 +280,6 @@ BarTouchData _touch(BuildContext context) {
   );
   final state = Provider.of<DashboardState>(context);
 
-
   return BarTouchData(
     touchTooltipData: BarTouchTooltipData(
       tooltipPadding: EdgeInsets.only(top: 2, left: 9, right: 9),
@@ -251,11 +287,11 @@ BarTouchData _touch(BuildContext context) {
         return ColorsHome.colorMap[14] ?? Colors.green;
       },
       getTooltipItem: (group, groupIndex, rod, rodIndex) {
-        final item =state.companies[rodIndex];
+        final item = state.companies[rodIndex];
 
         return BarTooltipItem(
           'Média: ${rod.toY}\n'
-              '${item.rates}',
+          'Filial: ${item.name}',
           style,
         );
       },

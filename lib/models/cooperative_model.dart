@@ -14,6 +14,7 @@ class CooperativeModel {
   ///nome da filial
   final int idCity;
 
+  ///Nome da filial
   final String name;
 
   ///Notas da filial
@@ -25,6 +26,7 @@ class CooperativeModel {
   ///Map em model
   factory CooperativeModel.fromMap(Map<String, dynamic> map) {
     return CooperativeModel(
+      name: map['name'],
       idCity: map['idCity'],
       rates: map['rates'],
       color: map['color'],
@@ -34,13 +36,10 @@ class CooperativeModel {
   /// Model em map
   Map<String, dynamic> toMap() {
     return {
+      'name': name,
       'idCity': idCity,
       'rates': rates,
       'color': color,
     };
   }
-
-
 }
-
-

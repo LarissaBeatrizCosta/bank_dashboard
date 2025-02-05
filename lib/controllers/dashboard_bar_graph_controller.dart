@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 
-import '../models/bar_model.dart';
 import '../models/cooperative_model.dart';
 import 'db_controller.dart';
 
@@ -19,7 +18,7 @@ class DashboardState extends ChangeNotifier {
   List<CooperativeModel> get companies => _companies;
 
 
-  // PRECISA DOCUMENTAR
+  /// Carregamento da página
   bool get isLoading => _isLoading;
 
   ///Inicialização do banco
