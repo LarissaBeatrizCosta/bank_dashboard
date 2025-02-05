@@ -1,26 +1,5 @@
 ///Classe das avaliações
 class RatesModel {
-  ///Nota sobre colaboradores
-  int collaboratorValue;
-
-  ///Comentário
-  String commentValue;
-
-  ///CPF
-  String cpfValue;
-
-  ///Nota sobre ambiente
-  int locationValue;
-
-  ///Nota de indicação
-  int numberRate;
-
-  ///Data
-  String time;
-
-  ///Nota sobre tempo de espera
-  int timeValue;
-
   ///Construtor
   RatesModel({
     required this.collaboratorValue,
@@ -31,6 +10,29 @@ class RatesModel {
     required this.timeValue,
     required this.time,
   });
+
+  ///Nota sobre colaboradores
+  final double collaboratorValue;
+
+  ///Comentário
+  final String commentValue;
+
+  ///CPF
+  final String cpfValue;
+
+  ///Nota sobre ambiente
+  final double locationValue;
+
+  ///Nota de indicação
+  final double numberRate;
+
+  ///Data
+  final String time;
+
+  ///Nota sobre tempo de espera
+  final double timeValue;
+
+
 
   ///Map em model
   factory RatesModel.fromMap(Map<String, dynamic> map) {

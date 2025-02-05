@@ -32,7 +32,7 @@ class _Graph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
-    final color = ColorsHome().colorMap[15];
+    final color = ColorsHome.colorMap[15];
     return Column(
       children: [
         Padding(

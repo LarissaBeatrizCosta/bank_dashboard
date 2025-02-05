@@ -15,21 +15,32 @@ class ContainerBackground extends StatelessWidget {
 
   ///Valor da altura do container no desktop
   final double heightValueDesktop;
+
   ///Valor da altura do container no mobile
   final double heightValueMobile;
+
   ///Valor da largura do container no desktop
   final double widthValueDesktop;
+
   ///Valor da largura do container no mobile
   final double widthValueMobile;
+
   ///Widget filho
   final Widget child;
+
   ///Valor da margem
   final EdgeInsets margin;
 
   @override
   Widget build(BuildContext context) {
-    var screenWidth = MediaQuery.of(context).size.width;
-    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    var screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     var availableWidth = screenWidth - 40;
 
     return Container(
@@ -43,11 +54,11 @@ class ContainerBackground extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: ColorsHome().colorMap[13] ?? Colors.grey,
+            color: ColorsHome.colorMap[13] ?? Colors.grey,
             blurRadius: 0.5,
           ),
         ],
-        color: ColorsHome().colorMap[11],
+        color: ColorsHome.colorMap[11],
         borderRadius: BorderRadius.circular(10),
       ),
       child: child,

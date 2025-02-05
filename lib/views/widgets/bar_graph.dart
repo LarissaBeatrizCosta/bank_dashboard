@@ -15,9 +15,10 @@ class BarGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = 'Indicadores de Satisfação';
     final icon = Icons.bar_chart;
+
     return ContainerBackground(
       heightValueDesktop: 0.8,
-      heightValueMobile: 0.5,
+      heightValueMobile: 0.52,
       widthValueDesktop: 1,
       widthValueMobile: 1,
       margin: EdgeInsets.symmetric(vertical: 5),
@@ -35,7 +36,7 @@ class _TitleGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
-    final color = ColorsHome().colorMap[15];
+    final color = ColorsHome.colorMap[15];
     return Column(
       children: [
         Padding(
@@ -194,7 +195,7 @@ FlGridData _grid() {
 FlTitlesData _titles() {
   final styleBottomBar = TextStyle(
     fontSize: 12,
-    color: ColorsHome().colorMap[17],
+    color: ColorsHome.colorMap[17],
   );
 
   final textAmbient = 'Ambiente';
@@ -237,14 +238,14 @@ FlTitlesData _titles() {
 
 BarTouchData _touch() {
   final style = TextStyle(
-    color: ColorsHome().colorMap[11],
+    color: ColorsHome.colorMap[11],
     fontWeight: FontWeight.w500,
   );
   return BarTouchData(
     touchTooltipData: BarTouchTooltipData(
       tooltipPadding: EdgeInsets.only(top: 2, left: 9, right: 9),
       getTooltipColor: (group) {
-        return ColorsHome().colorMap[14] ?? Colors.green;
+        return ColorsHome.colorMap[14] ?? Colors.green;
       },
       getTooltipItem: (group, groupIndex, rod, rodIndex) {
         return BarTooltipItem(

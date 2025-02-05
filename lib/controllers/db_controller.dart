@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../models/bar_model.dart';
 import '../models/cooperative_model.dart';
 import '../models/rates_model.dart';
 import '../models/user_model.dart';
+import '../views/utils/colors.dart';
 
 ///Classe que cuida do banco de dados
-class DataBaseController extends ChangeNotifier {
+class DataBaseController {
   ///Instancia do banco
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -18,10 +20,7 @@ class DataBaseController extends ChangeNotifier {
   late final positionUser = user.position;
 
   ///Lista de cooperativas
-  List<CooperativeModel> cooperativesList = <CooperativeModel>[];
-
-  ///Lista de avaliações
-  List<RatesModel> ratesList = <RatesModel>[];
+  final cooperativesList = <CooperativeModel>[];
 
   ///Pega id do login
   Future<String> getUid() async {
@@ -44,7 +43,6 @@ class DataBaseController extends ChangeNotifier {
         }
       }
     }
-    notifyListeners();
   }
 
   ///Busca o gerente vinculado com este id no banco
@@ -53,27 +51,50 @@ class DataBaseController extends ChangeNotifier {
 
     if (userId.exists && userId.data() != null) {
       user = UserModel.fromMap(userId.data() as Map<String, dynamic>);
-      await getCooperatives();
     }
   }
 
   ///Calcula  média
-  Future<void> calculateAverage() async {
-    var listLocationValue = <int>[];
-    var listCollaboratorValue = <int>[];
-    var listTimeValue = <int>[];
+  Future<List<BarModel>> calculateAverage(
+    List<RatesModel> ratesList,
+  ) async {
+    var listLocationValue = <double>[];
+    var listCollaboratorValue = <double>[];
+    var listTimeValue = <double>[];
+    var mainList = <BarModel>[];
 
     for (final item in ratesList) {
       listLocationValue.add(item.locationValue);
       listCollaboratorValue.add(item.collaboratorValue);
       listTimeValue.add(item.timeValue);
     }
-    var locationAvarege = calculateMedia(listLocationValue);
-    debugPrint(' LOCALIZAÇÃO: $locationAvarege');
+
+    final locationAvarege = calculateMedia(listLocationValue);
+    final collaboratorValueAvarege = calculateMedia(listCollaboratorValue);
+    final timeValueAvarege = calculateMedia(listTimeValue);
+
+    mainList.addAll(
+      [
+        BarModel(
+          type: RateType.locationValue,
+          value: locationAvarege,
+        ),
+        BarModel(
+          type: RateType.collaboratorValue,
+          value: collaboratorValueAvarege,
+        ),
+        BarModel(
+          type: RateType.timeValue,
+          value: timeValueAvarege,
+        ),
+      ],
+    );
+
+    return mainList;
   }
 
   ///Calcula media
-  double calculateMedia(List<int> rates) {
+  double calculateMedia(List<double> rates) {
     if (rates.isEmpty) {
       return 0.0;
     }
@@ -81,22 +102,53 @@ class DataBaseController extends ChangeNotifier {
   }
 
   ///Retorna os campos de cada cooperativa
-  Future<void> getCooperatives() async {
+  Future<List<CooperativeModel>> getCooperatives() async {
     final cooperativesCollection = await db.collection('cooperatives').get();
-    for (final cooperative in cooperativesCollection.docs) {
-      final ratesCollection =
-          await cooperative.reference.collection('rates').get();
-      ratesList.clear();
-      for (final rate in ratesCollection.docs) {
-        final rateModel = RatesModel.fromMap(rate.data());
-        ratesList.add(rateModel);
+
+    final list = cooperativesCollection.docs;
+
+    for (final (index, item) in list.indexed) {
+      switch (user.position) {
+        case 1:
+          await _getMainManagerCompanies(
+            index,
+            item,
+          );
       }
-      // cooperativesList.add(CooperativeModel(
-      //   idCity: cooperative.data()['idCity'],
-      //   rates: ratesList, //Função de média
-      //   color: ColorsHome().colorBar['color'] ?? Colors.grey,
-      // ));
-      await calculateAverage();
     }
+
+    return cooperativesList;
+  }
+
+  Future<void> _getMainManagerCompanies(
+    int index,
+    QueryDocumentSnapshot<Map<String, dynamic>> item,
+  ) async {
+    final cooperative = item;
+
+    final ratesCollection = await cooperative.reference
+        .collection(
+          'rates',
+        )
+        .get();
+
+    final ratesList = <RatesModel>[];
+
+    for (final rate in ratesCollection.docs) {
+      final rateModel = RatesModel.fromMap(rate.data());
+      ratesList.add(rateModel);
+    }
+
+    final rates = await calculateAverage(ratesList);
+
+    final company = CooperativeModel(
+      idCity: item['idCity'],
+      rates: rates,
+      color: ColorsHome().colorBar[index] ?? Colors.grey,
+    );
+
+
+    cooperativesList.add(company);
+
   }
 }

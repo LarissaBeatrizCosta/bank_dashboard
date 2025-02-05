@@ -12,11 +12,11 @@ class ScreenDefault extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var screenWidth = MediaQuery.of(context).size.width;
+    var screenWidth = MediaQuery.sizeOf(context).width;
     final style = TextStyle(
       fontSize: (screenWidth > 600 ? 23 : 20),
       fontWeight: FontWeight.bold,
-      color: ColorsHome().colorMap[11],
+      color: ColorsHome.colorMap[11],
     );
     final text = Padding(
       padding: (screenWidth > 600 ? EdgeInsets.all(20) : EdgeInsets.all(8)),
@@ -41,7 +41,7 @@ class ScreenDefault extends StatelessWidget {
               ]
             : null,
         automaticallyImplyLeading: false,
-        backgroundColor: ColorsHome().colorMap[13],
+        backgroundColor: ColorsHome.colorMap[13],
       ),
       body: _Body(child: child),
     );
@@ -49,6 +49,8 @@ class ScreenDefault extends StatelessWidget {
 }
 
 class _ImageBackground extends StatelessWidget {
+  const _ImageBackground();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -91,7 +93,7 @@ class _Row extends StatelessWidget {
     var nomeProvisorio = 'Nome provisório';
     final style = TextStyle(
       fontSize: 14,
-      color: ColorsHome().colorMap[11],
+      color: ColorsHome.colorMap[11],
     );
 
     final text = Text(
