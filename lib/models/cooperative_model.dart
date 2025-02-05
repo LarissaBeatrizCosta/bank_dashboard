@@ -5,11 +5,15 @@ import 'bar_model.dart';
 class CooperativeModel {
   ///Construtor
   CooperativeModel({
+    required this.idCooperative,
     required this.idCity,
     required this.rates,
     required this.color,
     required this.name,
   });
+
+  ///Id da cooperativa
+  final String idCooperative;
 
   ///nome da filial
   final int idCity;
@@ -26,6 +30,7 @@ class CooperativeModel {
   ///Map em model
   factory CooperativeModel.fromMap(Map<String, dynamic> map) {
     return CooperativeModel(
+      idCooperative: map['idCooperative'],
       name: map['name'],
       idCity: map['idCity'],
       rates: map['rates'],
@@ -36,6 +41,7 @@ class CooperativeModel {
   /// Model em map
   Map<String, dynamic> toMap() {
     return {
+      'id': idCooperative,
       'name': name,
       'idCity': idCity,
       'rates': rates,

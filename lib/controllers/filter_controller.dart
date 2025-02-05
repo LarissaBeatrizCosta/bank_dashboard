@@ -47,7 +47,7 @@ class FilterController extends ChangeNotifier {
     );
     return list.map((cooperative) {
       return DropdownMenuItem(
-          value: cooperative.name,
+          value: cooperative.idCooperative,
           child: Text(
             cooperative.name,
             style: style,

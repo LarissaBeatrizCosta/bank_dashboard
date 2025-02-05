@@ -144,6 +144,7 @@ class DataBaseController {
     final rates = await calculateAverage(ratesList);
 
     final company = CooperativeModel(
+      idCooperative: item.id,
       name: item['name'],
       idCity: item['idCity'],
       rates: rates,
