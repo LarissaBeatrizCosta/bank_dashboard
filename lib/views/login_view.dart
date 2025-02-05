@@ -1,7 +1,9 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../controllers/home_controller.dart';
 import 'utils/constants.dart';
 
 ///Tela de login
@@ -55,6 +57,7 @@ class _Body extends StatelessWidget {
     final providers = [EmailAuthProvider()];
 
 
+    final homeState =Provider.of<HomeController>(context);
 
 
 
@@ -76,6 +79,7 @@ class _Body extends StatelessWidget {
               return;
             }
             prefs.setString(Constants.userKey, token);
+            homeState.getUser();
             Navigator.pushReplacementNamed(context, '/home');
           },
         ),

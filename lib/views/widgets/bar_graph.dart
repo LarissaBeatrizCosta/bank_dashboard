@@ -249,7 +249,12 @@ BarTouchData _touch(BuildContext context) {
         return ColorsHome.colorMap[14] ?? Colors.green;
       },
       getTooltipItem: (group, groupIndex, rod, rodIndex) {
-        final item = state.companies[rodIndex];
+        final companyLength = state.companies.length;
+
+        final index =
+            groupIndex ~/ ((3 * state.companies.length) ~/ companyLength);
+
+        final item = state.companies[index];
 
         return BarTooltipItem(
           'Média: ${rod.toY}\n'

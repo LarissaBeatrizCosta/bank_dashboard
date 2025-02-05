@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../controllers/home_controller.dart';
 import 'colors.dart';
@@ -92,24 +93,31 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ///Banco controller
-    var homeController = HomeController();
+    final state = Provider.of<HomeController>(context);
+
     // var nameUser = homeController.name;
-    var nameUser = 'Nome Provisório';
+    var nameUser = state.userName;
+
     final style = TextStyle(
       fontSize: 14,
       color: ColorsHome.colorMap[11],
     );
 
-    final text = Text(
-      'Bem vindo, \n$nameUser',
-      textAlign: TextAlign.start,
-      style: style,
+    final text = RichText(
+      text: TextSpan(
+        style: style,
+        text: 'Bem vindo',
+        children: [
+          TextSpan(
+            text: ' \n$nameUser',
+            style: style.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
 
-    return Row(
-      children: [
-        text,
-      ],
-    );
+    return text;
   }
 }

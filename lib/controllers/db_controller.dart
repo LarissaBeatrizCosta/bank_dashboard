@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,7 @@ class DataBaseController {
   late UserModel user;
 
   ///Nome do gerente
-  late final String nameUser;
+  String get nameUser => user.name;
 
   ///Tipo do gerente
   late final positionUser = user.position;
@@ -105,6 +107,8 @@ class DataBaseController {
 
   ///Retorna os campos de cada cooperativa
   Future<List<CooperativeModel>> getCooperatives() async {
+    cooperativesList.clear();
+
     final cooperativesCollection = await db.collection('cooperatives').get();
 
     final list = cooperativesCollection.docs;
@@ -150,7 +154,7 @@ class DataBaseController {
   }
 
   ///Função que pega especificamente uma cooperativa
-  Future<void> getByIdCooperative(String id) async {
+  Future<List<CooperativeModel>> getByIdCooperative(String id) async {
     final cooperativeId = await db.collection('cooperatives').doc(id).get();
     final ratesCollection =
         await cooperativeId.reference.collection('rates').get();
@@ -162,12 +166,16 @@ class DataBaseController {
     }
     final rates = await calculateAverage(ratesList);
 
+    final intValue = Random().nextInt(4);
+
     final company = CooperativeModel(
       idCooperative: cooperativeId.id,
       name: cooperativeId['name'],
       idCity: cooperativeId['idCity'],
       rates: rates,
-      color: ColorsHome.colorMap[13] ?? Color(0xFF023047),
+      color: ColorsHome().colorBar[intValue] ?? Color(0xFF023047),
     );
+
+    return [company];
   }
 }

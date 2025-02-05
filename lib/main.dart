@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'controllers/home_controller.dart';
 import 'firebase_options.dart';
 import 'i10/auth.dart';
 import 'views/home_view.dart';
@@ -13,10 +15,11 @@ bool shouldUseFirebaseEmulator = false;
 
 ///Firebase
 late final FirebaseApp app;
+
 ///Firebase
 late final FirebaseAuth auth;
 
-void main() async{
+void main() async {
   Intl.defaultLocale = 'pt_BR';
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,18 +38,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: [
-        FirebaseUILocalizations.withDefaultOverrides(const LabelOverrides()),
-        FirebaseUILocalizations.delegate,
-      ],
-      debugShowCheckedModeBanner: false,
-      title: 'Dashboard',
-      initialRoute: '/login',
-      onGenerateRoute: Routes.createRoutes,
-      routes: {
-        '/home': (context) => const HomeView(),
-      },
+    return ChangeNotifierProvider<HomeController>(
+      create: (context) => HomeController(),
+      child: MaterialApp(
+        localizationsDelegates: [
+          FirebaseUILocalizations.withDefaultOverrides(const LabelOverrides()),
+          FirebaseUILocalizations.delegate,
+        ],
+        debugShowCheckedModeBanner: false,
+        title: 'Dashboard',
+        initialRoute: '/login',
+        onGenerateRoute: Routes.createRoutes,
+        routes: {
+          '/home': (context) => HomeView(),
+        },
+      ),
     );
   }
 }

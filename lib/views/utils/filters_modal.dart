@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../controllers/filter_controller.dart';
+import '../../controllers/dashboard_bar_graph_controller.dart';
 import 'colors.dart';
 
 ///Button que abre modal de filtros
@@ -8,28 +8,30 @@ class Filters extends StatelessWidget {
   ///Construtor
   Filters({super.key});
 
-  ///Texto do button
-  final text = Text(
-    'Filtros',
-    style: TextStyle(
-      fontSize: 14,
-      color: ColorsHome.colorMap[17],
-    ),
-  );
-
-  ///Estilo do button
-  final style = TextButton.styleFrom(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-    side: BorderSide(
-      color: ColorsHome.colorMap[13] ?? Colors.grey,
-    ),
-    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-  );
-
   @override
   Widget build(BuildContext context) {
+    ///Texto do button
+    final text = Text(
+      'Filtros',
+      style: TextStyle(
+        fontSize: 14,
+        color: ColorsHome.colorMap[17],
+      ),
+    );
+
+    ///Estilo do button
+    final style = TextButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      side: BorderSide(
+        color: ColorsHome.colorMap[13] ?? Colors.grey,
+      ),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+    );
+
+    final state = Provider.of<DashboardState>(context);
+
     return Align(
       alignment: Alignment.centerRight,
       child: Padding(
@@ -40,7 +42,10 @@ class Filters extends StatelessWidget {
             showDialog(
               context: context,
               builder: (context) {
-                return _Modal();
+                return ChangeNotifierProvider.value(
+                  value: state,
+                  child: _Modal(),
+                );
               },
             );
           },
@@ -64,71 +69,88 @@ class _Modal extends StatelessWidget {
         color: ColorsHome.colorMap[17],
       ),
     );
-    return ChangeNotifierProvider(
-      create: (context) => FilterController(),
-      child: AlertDialog(
-        backgroundColor: ColorsHome.colorMap[11],
-        contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        title: text,
-        content: _SizedBox(),
+
+    return AlertDialog(
+      backgroundColor: ColorsHome.colorMap[11],
+      contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      title: text,
+      content: _ContentDialog(),
+    );
+  }
+}
+
+class _ContentDialog extends StatelessWidget {
+  const _ContentDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    final state = Provider.of<DashboardState>(context);
+
+    final style = TextStyle(
+      color: Colors.black,
+      fontSize: 16,
+    );
+
+    return SizedBox(
+      height: 150,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _DropDown(
+            icon: Icons.calendar_today,
+            text: 'Período',
+            listItem: [],
+            onChange: (_) {},
+            value: null,
+          ),
+          _DropDown<String?>(
+            value: state.selectedCompany?.idCooperative,
+            icon: Icons.business,
+            text: 'Agência',
+            listItem: [
+              DropdownMenuItem(
+                value: '',
+                child: Text(
+                  'Todos',
+                  style: style,
+                ),
+              ),
+              for (final item in state.mainsCompanies)
+                DropdownMenuItem(
+                  value: item.idCooperative,
+                  child: Text(
+                    item.name,
+                    style: style,
+                  ),
+                ),
+            ],
+            onChange: (item) {
+              state.getCooperativeId(item);
+            },
+          ),
+        ],
       ),
     );
   }
 }
 
-class _SizedBox extends StatelessWidget {
-  const _SizedBox();
-
-  @override
-  Widget build(BuildContext context) {
-    final filterController = Provider.of<FilterController>(context);
-
-    return FutureBuilder(
-      future: filterController.buildItem(),
-      builder: (context, item) {
-        final cooperatives = item.data ?? [];
-        return SizedBox(
-          height: 150,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _DropDown(
-                icon: Icons.calendar_today,
-                text: 'Período',
-                listItem: [],
-                onChange: (_) {},
-              ),
-              _DropDown(
-                icon: Icons.business,
-                text: 'Agência',
-                listItem: cooperatives,
-                onChange: (item) {
-                  filterController.getCooperativeId(item);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _DropDown extends StatelessWidget {
+class _DropDown<T> extends StatelessWidget {
   const _DropDown({
     required this.icon,
     required this.text,
     required this.onChange,
     required this.listItem,
+    required this.value,
   });
 
   final IconData icon;
   final String text;
   final ValueChanged<dynamic>? onChange;
-  final List<DropdownMenuItem> listItem;
+  final List<DropdownMenuItem<T>> listItem;
+  final T value;
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +172,8 @@ class _DropDown extends StatelessWidget {
             ),
           ],
         ),
-        child: DropdownButtonFormField(
+        child: DropdownButtonFormField<T>(
+          value: value,
           isExpanded: true,
           icon: Icon(
             icon,

@@ -5,12 +5,14 @@ import 'colors.dart';
 ///Container default que envolve todos os graficos
 class ContainerBackground extends StatelessWidget {
   ///Construtor
-  const ContainerBackground({super.key,
+  const ContainerBackground({
+    super.key,
     required this.heightValueDesktop,
     required this.heightValueMobile,
     required this.widthValueDesktop,
     required this.widthValueMobile,
-    required this.child, required this.margin,
+    required this.child,
+    required this.margin,
   });
 
   ///Valor da altura do container no desktop
@@ -33,14 +35,8 @@ class ContainerBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    var screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     var availableWidth = screenWidth - 40;
 
     return Container(
