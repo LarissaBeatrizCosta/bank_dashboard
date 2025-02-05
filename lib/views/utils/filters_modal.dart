@@ -88,7 +88,7 @@ class _SizedBox extends StatelessWidget {
       builder: (context, item) {
         final cooperatives = item.data ?? [];
         return SizedBox(
-          height: 200,
+          height: 150,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
