@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../controllers/home_controller.dart';
 import 'colors.dart';
 
 ///Tela default da dash
@@ -90,14 +91,17 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var nomeProvisorio = 'Nome provisório';
+    ///Banco controller
+    var homeController = HomeController();
+    // var nameUser = homeController.name;
+    var nameUser = 'Nome Provisório';
     final style = TextStyle(
       fontSize: 14,
       color: ColorsHome.colorMap[11],
     );
 
     final text = Text(
-      'Bem vindo, \n$nomeProvisorio',
+      'Bem vindo, \n$nameUser',
       textAlign: TextAlign.start,
       style: style,
     );
