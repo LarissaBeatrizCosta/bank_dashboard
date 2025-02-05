@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../controllers/dashboard_bar_graph_controller.dart';
 import '../utils/colors.dart';
 import '../utils/container_background.dart';
+import '../utils/filters_modal.dart';
 
 ///Grafico de barras das avaliações com estrelas
 class BarGraph extends StatelessWidget {
@@ -54,45 +55,9 @@ class _TitleGraph extends StatelessWidget {
             ],
           ),
         ),
-        _Filters(),
+        Filters(),
         _BuilderGraph(),
       ],
-    );
-  }
-}
-
-class _Filters extends StatelessWidget {
-  _Filters();
-
-  final text = Text(
-    'Filtros',
-    style: TextStyle(
-      fontSize: 14,
-      color: ColorsHome.colorMap[17],
-    ),
-  );
-
-  final style = TextButton.styleFrom(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-    side: BorderSide(
-      color: ColorsHome.colorMap[13] ?? Colors.grey,
-    ),
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: const EdgeInsets.only(right: 20),
-        child: TextButton(
-          style: style,
-          onPressed: () {},
-          child: text,
-        ),
-      ),
     );
   }
 }
@@ -145,10 +110,7 @@ List<BarChartGroupData> _getBarGroups(
   double barsSpace,
   BuildContext context,
 ) {
-  final state = Provider.of<DashboardState>(
-    context,
-    listen: false,
-  );
+  final state = Provider.of<DashboardState>(context, listen: false);
 
   if (MediaQuery.sizeOf(context).width < 728) {
     return [

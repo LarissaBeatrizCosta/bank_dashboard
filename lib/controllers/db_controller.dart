@@ -15,6 +15,9 @@ class DataBaseController {
   ///Gerente
   late UserModel user;
 
+  ///Nome do gerente
+  late final nameUser;
+
   ///Tipo do gerente
   late final positionUser = user.position;
 
@@ -147,8 +150,6 @@ class DataBaseController {
       color: ColorsHome().colorBar[index] ?? Colors.grey,
     );
 
-
     cooperativesList.add(company);
-
   }
 }
