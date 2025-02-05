@@ -138,11 +138,21 @@ class _DropDown extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: ColorsHome.colorMap[13],
+          color: ColorsHome.colorMap[15],
+          boxShadow: [
+            BoxShadow(
+              color: ColorsHome.colorMap[14] ?? Colors.grey,
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
         ),
         child: DropdownButtonFormField(
           isExpanded: true,
-          icon: Icon(icon),
+          icon: Icon(
+            icon,
+            color: ColorsHome.colorMap[16],
+          ),
           hint: Text(
             text,
             style: style,
@@ -155,6 +165,7 @@ class _DropDown extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
             ),
             filled: true,
             fillColor: ColorsHome.colorMap[11],

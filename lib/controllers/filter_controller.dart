@@ -41,11 +41,17 @@ class FilterController extends ChangeNotifier {
 
   ///Constroi os itens do menu
   Future<List<DropdownMenuItem>> buildItem() async {
+    final style = TextStyle(
+      color: Colors.black,
+      fontSize: 16,
+    );
     return list.map((cooperative) {
       return DropdownMenuItem(
-        value: cooperative.name,
-        child: Text(cooperative.name),
-      );
+          value: cooperative.name,
+          child: Text(
+            cooperative.name,
+            style: style,
+          ));
     }).toList();
   }
 }
