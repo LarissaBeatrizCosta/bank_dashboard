@@ -1,10 +1,7 @@
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 
-import '../models/bar_model.dart';
 import '../models/cooperative_model.dart';
-import '../views/utils/colors.dart';
 import 'db_controller.dart';
 
 ///Controller do grafico de barras
