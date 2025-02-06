@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../controllers/dashboard_bar_graph_controller.dart';
 import '../utils/colors.dart';
 import '../utils/container_background.dart';
 
@@ -50,7 +52,59 @@ class _Graph extends StatelessWidget {
             ],
           ),
         ),
+        _BuilderList(),
       ],
+    );
+  }
+}
+
+class _BuilderList extends StatelessWidget {
+  const _BuilderList();
+
+  @override
+  Widget build(BuildContext context) {
+    final state = Provider.of<DashboardState>(context, listen: false);
+
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+    var availableWidth = screenWidth - 40;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 30),
+      child: SizedBox(
+        height: (screenWidth > 600 ? screenHeight * 0.6 : screenHeight * 0.35),
+        width: (screenWidth > 600 ? availableWidth * 1 : availableWidth * 1),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final barsSpace = 4 * constraints.maxWidth / 1300;
+            final barsSpaceGeneral = 16 * constraints.maxWidth;
+            final barsWidth = (11 * constraints.maxWidth / 160) / (1.5);
+
+            return ListView.builder(
+              itemCount: state.companies.length,
+              itemBuilder: (context, index) {
+                final cooperatives = state.companies[index];
+                return Card(
+                  color: Colors.white,
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 16.0),
+                  elevation: 4,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(16.0),
+                    title: Text(
+                      cooperatives.name,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }

@@ -101,6 +101,9 @@ List<PieChartSectionData> pieChart() {
         value: value,
         title: title,
         color: color,
+        titleStyle: TextStyle(
+          color: ColorsHome.colorMap[11],
+        ),
         radius: 50,
       );
     },
