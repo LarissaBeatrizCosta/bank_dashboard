@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
@@ -13,8 +14,8 @@ class PieGraph extends StatelessWidget {
     final text = 'Índice de Recomendação';
     final icon = Icons.pie_chart;
     return ContainerBackground(
-      heightValueDesktop: 0.43,
-      heightValueMobile: 0.28,
+      heightValueDesktop: 0.65,
+      heightValueMobile: 0.55,
       widthValueDesktop: 0.495,
       widthValueMobile: 1,
       margin: EdgeInsets.symmetric(vertical: 5),
@@ -50,7 +51,58 @@ class _Graph extends StatelessWidget {
             ],
           ),
         ),
+        _BuilderGraph(),
+        Padding(
+          padding: const EdgeInsets.only(top: 60),
+          child: Text('Legenda'),
+        ),
       ],
     );
   }
+}
+
+class _BuilderGraph extends StatelessWidget {
+  const _BuilderGraph();
+
+  @override
+  Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+    var availableWidth = screenWidth - 40;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: SizedBox(
+        height: (screenWidth > 600 ? screenHeight * 0.3 : screenHeight * 0.20),
+        width: (screenWidth > 600 ? availableWidth * 1 : availableWidth * 1),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return PieChart(
+              PieChartData(
+                sections: pieChart(),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+///Pedaços do grafico
+List<PieChartSectionData> pieChart() {
+  return List.generate(
+    5,
+    (i) {
+      double value = 10;
+      var title = 'teste';
+      var color = ColorsHome.colorMap[16];
+      return PieChartSectionData(
+        value: value,
+        title: title,
+        color: color,
+        radius: 50,
+      );
+    },
+  );
 }

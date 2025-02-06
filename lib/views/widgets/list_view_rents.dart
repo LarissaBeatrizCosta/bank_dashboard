@@ -13,8 +13,8 @@ class ListViewRents extends StatelessWidget {
     final text = 'Avaliações Recentes';
     final icon = Icons.list;
     return ContainerBackground(
-      heightValueDesktop: 0.43,
-      heightValueMobile: 0.28,
+      heightValueDesktop: 0.65,
+      heightValueMobile: 0.50,
       widthValueDesktop: 0.495,
       widthValueMobile: 1,
       margin: EdgeInsets.symmetric(vertical: 5),
