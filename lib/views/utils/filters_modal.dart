@@ -125,7 +125,15 @@ class _ContentDialog extends StatelessWidget {
             },
           ),
           StyledTextButton(
-            onPressed: () {},
+            onPressed: () {
+              showDatePicker(
+                context: context,
+                currentDate: DateTime.now(),
+                firstDate: DateTime(2025),
+                lastDate: DateTime(2030),
+                initialEntryMode: DatePickerEntryMode.calendarOnly,
+              );
+            },
             text: 'Período',
           ),
         ],
