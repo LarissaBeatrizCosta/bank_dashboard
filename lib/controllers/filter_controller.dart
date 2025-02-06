@@ -33,7 +33,6 @@ class FilterController extends ChangeNotifier {
     notifyListeners();
   }
 
-  //TODO: VER PORQUE ATUALIZA O DROPDOWN SEM CHMAR ATUALIZAÇÃO
   ///Atualiza cooperativa selecionada
   void updateCooperativeSelected(String newvalue) async {
     cooperativeSelected = newvalue;

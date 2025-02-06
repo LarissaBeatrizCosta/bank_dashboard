@@ -17,11 +17,11 @@ class HomeController extends ChangeNotifier {
   ///Name user
   late final String _userName;
 
-  // Documentar
+  ///Name user
   String get userName => _userName;
   var _isLoading = true;
 
-  // DOCUMENTAR
+  ///Carregamento
   bool get isLoading => _isLoading;
 
   Future<void> _init() async {
@@ -30,15 +30,11 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // DOCUMENTAR
+  ///Pega o usuário
   Future<void> getUser() async {
     final prefs = await SharedPreferences.getInstance();
 
-
     await dbController.getUser();
-    print('teste: 01');
-    print(dbController.nameUser);
-
     _userName = dbController.nameUser;
 
     prefs.setString(Constants.userName, _userName);

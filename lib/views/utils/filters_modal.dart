@@ -6,7 +6,7 @@ import 'colors.dart';
 ///Button que abre modal de filtros
 class Filters extends StatelessWidget {
   ///Construtor
-  Filters({super.key});
+  const Filters({super.key});
 
   @override
   Widget build(BuildContext context) {

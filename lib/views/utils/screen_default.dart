@@ -94,8 +94,6 @@ class _Row extends StatelessWidget {
   Widget build(BuildContext context) {
     ///Banco controller
     final state = Provider.of<HomeController>(context);
-
-    // var nameUser = homeController.name;
     var nameUser = state.userName;
 
     final style = TextStyle(
@@ -109,7 +107,7 @@ class _Row extends StatelessWidget {
         text: 'Bem vindo',
         children: [
           TextSpan(
-            text: ' \n$nameUser',
+            text: ' \nMudar',
             style: style.copyWith(
               fontWeight: FontWeight.bold,
             ),

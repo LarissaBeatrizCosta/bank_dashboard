@@ -28,6 +28,7 @@ class DashboardState extends ChangeNotifier {
 
   CooperativeModel? _selectedCompany;
 
+  ///Cooperativas selecionadas
   CooperativeModel? get selectedCompany => _selectedCompany;
 
   Future<void> _init() async {
@@ -64,7 +65,7 @@ class DashboardState extends ChangeNotifier {
     final list = await dbController.getByIdCooperative(id);
 
     _companies.addAll(list);
-//a
+
     if (list.isNotEmpty) {
       _selectedCompany = list.first;
     }
