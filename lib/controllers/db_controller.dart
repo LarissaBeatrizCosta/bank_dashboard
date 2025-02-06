@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../models/bar_model.dart';
+import '../models/city_per_user.dart';
 import '../models/cooperative_model.dart';
 import '../models/rates_model.dart';
 import '../models/user_model.dart';
@@ -19,7 +20,7 @@ class DataBaseController {
   late UserModel user;
 
   ///Nome do gerente
-   String get nameUser => user.name;
+  String get nameUser => user.name;
 
   ///Tipo do gerente
   late final positionUser = user.position;
@@ -60,7 +61,9 @@ class DataBaseController {
   }
 
   ///Calcula  média
-  Future<List<BarModel>> calculateAverage(List<RatesModel> ratesList,) async {
+  Future<List<BarModel>> calculateAverage(
+    List<RatesModel> ratesList,
+  ) async {
     var listLocationValue = <double>[];
     var listCollaboratorValue = <double>[];
     var listTimeValue = <double>[];
@@ -119,18 +122,20 @@ class DataBaseController {
             index,
             item,
           );
+        case 2:
+          await _getSecondManagerCompanies(index, item);
       }
     }
 
     return cooperativesList;
   }
 
-  Future<void> _getMainManagerCompanies(int index,
-      QueryDocumentSnapshot<Map<String, dynamic>> item) async {
+  Future<void> _getMainManagerCompanies(
+      int index, QueryDocumentSnapshot<Map<String, dynamic>> item) async {
     final cooperative = item;
 
     final ratesCollection =
-    await cooperative.reference.collection('rates').get();
+        await cooperative.reference.collection('rates').get();
 
     final ratesList = <RatesModel>[];
 
@@ -152,11 +157,33 @@ class DataBaseController {
     cooperativesList.add(company);
   }
 
+  Future<void> _getSecondManagerCompanies(
+      int index, QueryDocumentSnapshot<Map<String, dynamic>> item) async {
+    final cityPerUserCollection = await db.collection('city_per_user').get();
+    final cooperative = item;
+
+
+    final cityUserList = <CityUserModel>[];
+    final list = cityPerUserCollection.docs;
+    for (final item in list) {
+      final cityUserModel = CityUserModel.fromMap(item.data());
+      cityUserList.add(cityUserModel);
+    }
+
+    final userId = await getUid();
+    for(final item in cityUserList){
+      if(item.idUser == userId){
+
+      }
+    }
+
+  }
+
   ///Função que pega especificamente uma cooperativa
   Future<List<CooperativeModel>> getByIdCooperative(String id) async {
     final cooperativeId = await db.collection('cooperatives').doc(id).get();
     final ratesCollection =
-    await cooperativeId.reference.collection('rates').get();
+        await cooperativeId.reference.collection('rates').get();
     final ratesList = <RatesModel>[];
 
     for (final rate in ratesCollection.docs) {
@@ -179,8 +206,8 @@ class DataBaseController {
   }
 
   ///Pega as cooperativas por data
-  Future<List<CooperativeModel>> getCooperativesByDate(DateTime initial,
-      DateTime last, String? id) async {
+  Future<List<CooperativeModel>> getCooperativesByDate(
+      DateTime initial, DateTime last, String? id) async {
     final cooperativesByDate = <CooperativeModel>[];
 
     if (id == null || id.isEmpty) {
@@ -201,7 +228,8 @@ class DataBaseController {
     return cooperativesByDate;
   }
 
-  Future<void> _processCooperative(DocumentSnapshot<Map<String, dynamic>> item,
+  Future<void> _processCooperative(
+      DocumentSnapshot<Map<String, dynamic>> item,
       DateTime initial,
       DateTime last,
       List<CooperativeModel> cooperativesByDate) async {
