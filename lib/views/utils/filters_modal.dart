@@ -88,14 +88,15 @@ class _ContentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<DashboardState>(context);
-
+    var initialDate = state.initialDate;
+    var lastDate = state.lastDate;
     final style = TextStyle(
       color: Colors.black,
       fontSize: 16,
     );
 
     return SizedBox(
-      height: 150,
+      height: 160,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -124,20 +125,57 @@ class _ContentDialog extends StatelessWidget {
               state.getCooperativeId(item);
             },
           ),
-          StyledTextButton(
-            onPressed: () {
-              showDatePicker(
-                context: context,
-                currentDate: DateTime.now(),
-                firstDate: DateTime(2025),
-                lastDate: DateTime(2030),
-                initialEntryMode: DatePickerEntryMode.calendarOnly,
-              );
+          DatePickerButton(
+            onDateSelected: (date) {
+              state.getDate(1, date);
             },
-            text: 'Período',
+            text: 'Data inicial: $initialDate',
+          ),
+          DatePickerButton(
+            onDateSelected: (date) {
+              state.getDate(2, date);
+            },
+            text: 'Data Final: $lastDate',
           ),
         ],
       ),
+    );
+  }
+}
+
+///Calendário
+class DatePickerButton extends StatelessWidget {
+  /// Callback para quando a data for selecionada
+  final Function(DateTime?) onDateSelected;
+
+  /// Texto do botão
+  final String text;
+
+  /// Construtor
+  const DatePickerButton({
+    required this.onDateSelected,
+    required this.text,
+    super.key,
+  });
+
+  /// Método para exibir o DatePicker
+  Future<void> _selectDate(BuildContext context) async {
+    var selectedDate = await showDatePicker(
+      context: context,
+      currentDate: DateTime.now(),
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2030),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+    );
+
+    onDateSelected(selectedDate);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StyledTextButton(
+      onPressed: () => _selectDate(context),
+      text: text,
     );
   }
 }

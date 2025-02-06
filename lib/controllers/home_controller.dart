@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../views/utils/constants.dart';
 import 'db_controller.dart';
 
 ///Controller da HomeView

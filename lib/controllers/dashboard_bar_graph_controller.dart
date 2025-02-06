@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 import '../models/cooperative_model.dart';
 import 'db_controller.dart';
@@ -70,6 +71,28 @@ class DashboardState extends ChangeNotifier {
       _selectedCompany = list.first;
     }
 
+    notifyListeners();
+  }
+
+  ///Data selecionada
+  String initialDate = '';
+
+  ///Data selecionada
+  String lastDate = '';
+
+  ///Recupera a data selecionada
+  Future<void> getDate(int num, DateTime? date) async {
+    var formattedDate = DateFormat('dd/MM/yyyy').format(
+      date ?? DateTime.now(),
+    );
+    switch (num) {
+      case 1:
+        initialDate = formattedDate;
+      case 2:
+        lastDate = formattedDate;
+      default:
+        '';
+    }
     notifyListeners();
   }
 }
