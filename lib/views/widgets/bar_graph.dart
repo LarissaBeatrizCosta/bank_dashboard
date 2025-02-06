@@ -19,7 +19,7 @@ class BarGraph extends StatelessWidget {
 
     return ContainerBackground(
       heightValueDesktop: 0.8,
-      heightValueMobile: 0.52,
+      heightValueMobile: 0.55,
       widthValueDesktop: 1,
       widthValueMobile: 1,
       margin: EdgeInsets.symmetric(vertical: 5),

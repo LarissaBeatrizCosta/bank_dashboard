@@ -94,7 +94,7 @@ class _Row extends StatelessWidget {
   Widget build(BuildContext context) {
     ///Banco controller
     final state = Provider.of<HomeController>(context);
-    var nameUser = state.userName;
+    // var nameUser = state.userName;
 
     final style = TextStyle(
       fontSize: 14,

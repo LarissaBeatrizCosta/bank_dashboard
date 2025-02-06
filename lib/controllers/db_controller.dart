@@ -18,7 +18,7 @@ class DataBaseController {
   late UserModel user;
 
   ///Nome do gerente
-  String get nameUser => user.name;
+  // String get nameUser => user.name;
 
   ///Tipo do gerente
   late final positionUser = user.position;

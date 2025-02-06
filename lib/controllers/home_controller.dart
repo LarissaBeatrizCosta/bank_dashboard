@@ -15,10 +15,10 @@ class HomeController extends ChangeNotifier {
   DataBaseController dbController = DataBaseController();
 
   ///Name user
-  late final String _userName;
+  // late final String _userName;
 
   ///Name user
-  String get userName => _userName;
+  // String get userName => _userName;
   var _isLoading = true;
 
   ///Carregamento
@@ -35,8 +35,8 @@ class HomeController extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     await dbController.getUser();
-    _userName = dbController.nameUser;
+    // _userName = dbController.nameUser;
 
-    prefs.setString(Constants.userName, _userName);
+    // prefs.setString(Constants.userName, _userName);
   }
 }
