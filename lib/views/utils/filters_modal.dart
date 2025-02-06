@@ -99,13 +99,6 @@ class _ContentDialog extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _DropDown(
-            icon: Icons.calendar_today,
-            text: 'Período',
-            listItem: [],
-            onChange: (_) {},
-            value: null,
-          ),
           _DropDown<String?>(
             value: state.selectedCompany?.idCooperative,
             icon: Icons.business,
@@ -131,7 +124,75 @@ class _ContentDialog extends StatelessWidget {
               state.getCooperativeId(item);
             },
           ),
+          StyledTextButton(
+            onPressed: () {},
+            text: 'Período',
+          ),
         ],
+      ),
+    );
+  }
+}
+
+///Button de periodo
+class StyledTextButton extends StatelessWidget {
+  ///Onpressed do button
+  final VoidCallback onPressed;
+
+  ///Texto button
+  final String text;
+
+  ///Construtor
+  const StyledTextButton({
+    required this.onPressed,
+    required this.text,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final style = TextStyle(
+      fontSize: 16,
+      color: ColorsHome.colorMap[17],
+    );
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: ColorsHome.colorMap[15],
+          boxShadow: [
+            BoxShadow(
+              color: ColorsHome.colorMap[14] ?? Colors.grey,
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: TextButton(
+          onPressed: onPressed,
+          style: TextButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            backgroundColor: ColorsHome.colorMap[11],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                text,
+                style: style,
+              ),
+              Icon(
+                Icons.arrow_drop_down,
+                color: ColorsHome.colorMap[16],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
