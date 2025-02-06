@@ -94,7 +94,7 @@ class _Row extends StatelessWidget {
   Widget build(BuildContext context) {
     ///Banco controller
     final state = Provider.of<HomeController>(context);
-    // var nameUser = state.userName;
+    var nameUser = state.userName;
 
     final style = TextStyle(
       fontSize: 14,
@@ -104,12 +104,14 @@ class _Row extends StatelessWidget {
     final text = RichText(
       text: TextSpan(
         style: style,
-        text: 'Bem vindo',
+        text: 'Bem vindo,',
         children: [
           TextSpan(
-            text: ' \nMudar',
+            text: ' \n$nameUser',
             style: style.copyWith(
-              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: ColorsHome.colorMap[15],
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

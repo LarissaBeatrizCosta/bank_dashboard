@@ -55,11 +55,9 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final providers = [EmailAuthProvider()];
-
-
     final homeState =Provider.of<HomeController>(context);
 
-
+    homeState.getUser();
 
     return SignInScreen(
       sideBuilder: (context, constraints) {

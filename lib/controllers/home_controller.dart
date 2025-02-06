@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../views/utils/constants.dart';
 import 'db_controller.dart';
 
 ///Controller da HomeView
@@ -13,10 +14,10 @@ class HomeController extends ChangeNotifier {
   DataBaseController dbController = DataBaseController();
 
   ///Name user
-  // late final String _userName;
+  late final String _userName;
 
   ///Name user
-  // String get userName => _userName;
+  String get userName => _userName;
   var _isLoading = true;
 
   ///Carregamento
@@ -33,8 +34,7 @@ class HomeController extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
 
     await dbController.getUser();
-    // _userName = dbController.nameUser;
-
-    // prefs.setString(Constants.userName, _userName);
+     _userName = dbController.nameUser;
+     prefs.setString(Constants.userName, _userName);
   }
 }
