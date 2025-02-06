@@ -64,7 +64,7 @@ class DashboardState extends ChangeNotifier {
     final list = await dbController.getByIdCooperative(id);
 
     _companies.addAll(list);
-
+//a
     if (list.isNotEmpty) {
       _selectedCompany = list.first;
     }
