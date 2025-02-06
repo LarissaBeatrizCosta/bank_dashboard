@@ -76,10 +76,6 @@ class _BuilderList extends StatelessWidget {
         width: (screenWidth > 600 ? availableWidth * 1 : availableWidth * 1),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final barsSpace = 4 * constraints.maxWidth / 1300;
-            final barsSpaceGeneral = 16 * constraints.maxWidth;
-            final barsWidth = (11 * constraints.maxWidth / 160) / (1.5);
-
             return ListView.builder(
               itemCount: state.companies.length,
               itemBuilder: (context, index) {
