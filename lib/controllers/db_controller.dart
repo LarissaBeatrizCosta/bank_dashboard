@@ -60,9 +60,7 @@ class DataBaseController {
   }
 
   ///Calcula  média
-  Future<List<BarModel>> calculateAverage(
-    List<RatesModel> ratesList,
-  ) async {
+  Future<List<BarModel>> calculateAverage(List<RatesModel> ratesList,) async {
     var listLocationValue = <double>[];
     var listCollaboratorValue = <double>[];
     var listTimeValue = <double>[];
@@ -127,12 +125,12 @@ class DataBaseController {
     return cooperativesList;
   }
 
-  Future<void> _getMainManagerCompanies(
-      int index, QueryDocumentSnapshot<Map<String, dynamic>> item) async {
+  Future<void> _getMainManagerCompanies(int index,
+      QueryDocumentSnapshot<Map<String, dynamic>> item) async {
     final cooperative = item;
 
     final ratesCollection =
-        await cooperative.reference.collection('rates').get();
+    await cooperative.reference.collection('rates').get();
 
     final ratesList = <RatesModel>[];
 
@@ -158,7 +156,7 @@ class DataBaseController {
   Future<List<CooperativeModel>> getByIdCooperative(String id) async {
     final cooperativeId = await db.collection('cooperatives').doc(id).get();
     final ratesCollection =
-        await cooperativeId.reference.collection('rates').get();
+    await cooperativeId.reference.collection('rates').get();
     final ratesList = <RatesModel>[];
 
     for (final rate in ratesCollection.docs) {
@@ -180,24 +178,54 @@ class DataBaseController {
     return [company];
   }
 
-  ///Pega a lista de cooperativas daquele periodo de data
-  Future<void> getCooperativesByDate(DateTime initial, DateTime last) async {
-    final cooperativesCollection = await db.collection('cooperatives').get();
+  ///Pega as cooperativas por data
+  Future<List<CooperativeModel>> getCooperativesByDate(DateTime initial,
+      DateTime last, String? id) async {
+    final cooperativesByDate = <CooperativeModel>[];
 
-    final list = cooperativesCollection.docs;
+    if (id == null || id.isEmpty) {
+      final cooperativesCollection = await db.collection('cooperatives').get();
 
-    for (final item in list) {
-      final ratesCollection = await item.reference
-          .collection('rates')
-          .where('time', isGreaterThanOrEqualTo: initial)
-          .where('time', isLessThanOrEqualTo: last)
-          .get();
-
-      for (final rate in ratesCollection.docs) {
-        // Aqui você acessa o campo 'time' de cada documento e imprime
-        final name = item.data();  // Acessa o valor do campo 'time'
-        print('Time: $name');
+      for (final item in cooperativesCollection.docs) {
+        await _processCooperative(item, initial, last, cooperativesByDate);
       }
+    } else {
+      final cooperativeById = await db.collection('cooperatives').doc(id).get();
+
+      if (cooperativeById.exists) {
+        await _processCooperative(
+            cooperativeById, initial, last, cooperativesByDate);
+      }
+    }
+
+    return cooperativesByDate;
+  }
+
+  Future<void> _processCooperative(DocumentSnapshot<Map<String, dynamic>> item,
+      DateTime initial,
+      DateTime last,
+      List<CooperativeModel> cooperativesByDate) async {
+    final ratesCollection = await item.reference
+        .collection('rates')
+        .where('time', isGreaterThanOrEqualTo: initial)
+        .where('time', isLessThanOrEqualTo: last)
+        .get();
+
+    if (ratesCollection.docs.isNotEmpty) {
+      final ratesList = ratesCollection.docs
+          .map((rate) => RatesModel.fromMap(rate.data()))
+          .toList();
+
+      final rates = await calculateAverage(ratesList);
+      final intValue = Random().nextInt(4);
+
+      cooperativesByDate.add(CooperativeModel(
+        idCooperative: item.id,
+        name: item['name'],
+        idCity: item['idCity'],
+        rates: rates,
+        color: ColorsHome().colorBar[intValue] ?? Color(0xFF023047),
+      ));
     }
   }
 }

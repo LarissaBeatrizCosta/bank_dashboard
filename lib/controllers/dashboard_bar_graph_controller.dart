@@ -80,8 +80,10 @@ class DashboardState extends ChangeNotifier {
   ///Data selecionada
   String lastDate = '';
 
+  ///Data inicial do calendario
   DateTime? inial;
 
+  ///Data final do calendario
   DateTime? last = DateTime(23, 59, 59);
 
   ///Recupera a data selecionada
@@ -106,11 +108,24 @@ class DashboardState extends ChangeNotifier {
   }
 
   ///Pega a função do banco de pegar as cooperativas por data
-  Future<void> getCooperativeDate() async {
-    if (inial != null && last != null) {
-      var cooperatives = await dbController.getCooperativesByDate(
-          inial as DateTime, last as DateTime);
+  Future<void> getCooperativeDate(String? id) async {
+    _companies.clear();
+    if (id == null || id.isEmpty) {
+      if (inial != null && last != null) {
+        await dbController.getCooperativesByDate(
+            inial as DateTime, last as DateTime, null);
+      }
+      return;
     }
+    var list = <CooperativeModel>[];
+    if (inial != null && last != null) {
+      list = await dbController.getCooperativesByDate(
+          inial as DateTime, last as DateTime, id);
+    }
+    // _companies.add(list);
+    // if (list.isNotEmpty) {
+    //   _selectedCompany = list.first;
+    // }
 
     notifyListeners();
   }
