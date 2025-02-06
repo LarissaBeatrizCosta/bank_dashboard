@@ -169,6 +169,8 @@ class DatePickerButton extends StatelessWidget {
     );
 
     onDateSelected(selectedDate);
+    final state = Provider.of<DashboardState>(context, listen: false);
+    await state.getCooperativeDate();
   }
 
   @override

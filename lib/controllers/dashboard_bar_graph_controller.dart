@@ -80,6 +80,10 @@ class DashboardState extends ChangeNotifier {
   ///Data selecionada
   String lastDate = '';
 
+  DateTime? inial;
+
+  DateTime? last = DateTime(23, 59, 59);
+
   ///Recupera a data selecionada
   Future<void> getDate(int num, DateTime? date) async {
     var formattedDate = DateFormat('dd/MM/yyyy').format(
@@ -87,12 +91,27 @@ class DashboardState extends ChangeNotifier {
     );
     switch (num) {
       case 1:
+        inial = date;
         initialDate = formattedDate;
       case 2:
+        if (date != null) {
+          last = DateTime(date.year, date.month, date.day, 23, 59, 59, 999);
+        }
         lastDate = formattedDate;
       default:
         '';
     }
+
+    notifyListeners();
+  }
+
+  ///Pega a função do banco de pegar as cooperativas por data
+  Future<void> getCooperativeDate() async {
+    if (inial != null && last != null) {
+      var cooperatives = await dbController.getCooperativesByDate(
+          inial as DateTime, last as DateTime);
+    }
+
     notifyListeners();
   }
 }

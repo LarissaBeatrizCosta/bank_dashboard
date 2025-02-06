@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -177,5 +178,26 @@ class DataBaseController {
     );
 
     return [company];
+  }
+
+  ///Pega a lista de cooperativas daquele periodo de data
+  Future<void> getCooperativesByDate(DateTime initial, DateTime last) async {
+    final cooperativesCollection = await db.collection('cooperatives').get();
+
+    final list = cooperativesCollection.docs;
+
+    for (final item in list) {
+      final ratesCollection = await item.reference
+          .collection('rates')
+          .where('time', isGreaterThanOrEqualTo: initial)
+          .where('time', isLessThanOrEqualTo: last)
+          .get();
+
+      for (final rate in ratesCollection.docs) {
+        // Aqui você acessa o campo 'time' de cada documento e imprime
+        final name = item.data();  // Acessa o valor do campo 'time'
+        print('Time: $name');
+      }
+    }
   }
 }
