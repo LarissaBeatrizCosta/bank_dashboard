@@ -22,6 +22,9 @@ class DataBaseController {
   ///Nome do gerente
   String get nameUser => user.name;
 
+  ///Filial do gerente
+  String get companyUser => user.idCompany;
+
   ///Tipo do gerente
   late final positionUser = user.position;
 
@@ -126,6 +129,9 @@ class DataBaseController {
         case 2:
           await _getSecondManagerCompanies(index, item);
           break;
+        case 3:
+          await _getThirdManagerCompanies(index);
+          break;
       }
     }
 
@@ -164,7 +170,6 @@ class DataBaseController {
     final cityPerUserCollection = await db.collection('city_per_user').get();
     final cityUserList = <CityUserModel>[];
 
-    // Preenche a lista com as cidades associadas ao usuário
     for (final cityDoc in cityPerUserCollection.docs) {
       final cityUserModel = CityUserModel.fromMap(cityDoc.data());
       cityUserList.add(cityUserModel);
@@ -197,6 +202,33 @@ class DataBaseController {
         }
       }
     }
+  }
+
+  Future<void> _getThirdManagerCompanies(int index) async {
+    final idCompany = companyUser;
+    final cooperativeId =
+        await db.collection('cooperatives').doc(idCompany).get();
+
+    final ratesCollection =
+        await cooperativeId.reference.collection('rates').get();
+    final ratesList = <RatesModel>[];
+
+    for (final rate in ratesCollection.docs) {
+      final rateModel = RatesModel.fromMap(rate.data());
+      ratesList.add(rateModel);
+    }
+
+    final rates = await calculateAverage(ratesList);
+
+    final company = CooperativeModel(
+      idCooperative: cooperativeId.id,
+      name: cooperativeId['name'],
+      idCity: cooperativeId['idCity'],
+      rates: rates,
+      color: ColorsHome().colorBar[index] ?? Colors.grey,
+    );
+
+    cooperativesList.add(company);
   }
 
   ///Função que pega especificamente uma cooperativa
