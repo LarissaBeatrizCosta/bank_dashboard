@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 
 import '../models/cooperative_model.dart';
-import '../views/utils/constants.dart';
 import '../views/utils/constants.dart';
 import 'db_controller.dart';
 
@@ -64,7 +62,7 @@ class DashboardState extends ChangeNotifier {
 
   /// Get all companies
   Future<void> getAllCompanies() async {
-    final list = await _dbController.getCooperatives();
+    final list = await _dbController.getCooperativesByDate();
 
     _companies.clear();
     _companies.addAll(list);
@@ -139,9 +137,9 @@ class DashboardState extends ChangeNotifier {
 
     var list = <CooperativeModel>[];
     list = await _dbController.getCooperativesByDate(
-      initial,
-      last,
-      id,
+      initial: initial,
+      last: last,
+      id: id,
     );
     _companies.addAll(list);
 

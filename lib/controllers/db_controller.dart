@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import '../models/bar_model.dart';
 import '../models/city_per_user.dart';
 import '../models/cooperative_model.dart';
@@ -16,7 +17,7 @@ class DataBaseController {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   // Documentar
-  var initialized = false;
+  bool initialized = false;
 
   ///Gerente
   late final UserModel _user;
@@ -119,63 +120,12 @@ class DataBaseController {
     return rates.reduce((a, b) => a + b) / rates.length;
   }
 
-  ///Retorna os campos de cada cooperativa
-  Future<List<CooperativeModel>> getCooperatives() async {
-    cooperativesList.clear();
-
-    final cooperativesCollection = await db.collection('cooperatives').get();
-
-    final list = cooperativesCollection.docs;
-
-    for (final (index, item) in list.indexed) {
-      switch (_user.position) {
-        case 1:
-          await _getMainManagerCompanies(
-            index,
-            item,
-          );
-          break;
-        case 2:
-          await _getSecondManagerCompanies(index, item);
-          break;
-        case 3:
-          await _getThirdManagerCompanies(index);
-          break;
-      }
-    }
-
-    return cooperativesList;
-  }
-
-  Future<void> _getMainManagerCompanies(
-      int index, QueryDocumentSnapshot<Map<String, dynamic>> item) async {
-    final cooperative = item;
-
-    final ratesCollection =
-        await cooperative.reference.collection('rates').get();
-
-    final ratesList = <RatesModel>[];
-
-    for (final rate in ratesCollection.docs) {
-      final rateModel = RatesModel.fromMap(rate.data());
-      ratesList.add(rateModel);
-    }
-
-    final rates = await calculateAverage(ratesList);
-
-    final company = CooperativeModel(
-      idCooperative: item.id,
-      name: item['name'],
-      idCity: item['idCity'],
-      rates: rates,
-      color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
-    );
-
-    cooperativesList.add(company);
-  }
-
-  Future<void> _getSecondManagerCompanies(
-      int index, QueryDocumentSnapshot<Map<String, dynamic>> item) async {
+  Future<void> _getSecondManagerCompaniesFilter({
+    required QuerySnapshot<Map<String, dynamic>> item,
+    DateTime? initial,
+    DateTime? last,
+    String? id,
+  }) async {
     final cityPerUserCollection = await db.collection('city_per_user').get();
     final cityUserList = <CityUserModel>[];
 
@@ -184,42 +134,56 @@ class DataBaseController {
       cityUserList.add(cityUserModel);
     }
     final userId = await getUid();
+    final list = <CooperativeModel>[];
 
-    for (final cityUser in cityUserList) {
-      if (cityUser.idUser == userId) {
-        if (item['idCity'] == cityUser.idCity) {
-          final ratesCollection =
-              await item.reference.collection('rates').get();
-          final ratesList = <RatesModel>[];
+    for (final it in item.docs) {
+      for (final cityUser in cityUserList) {
+        if (cityUser.idUser == userId) {
+          if (it['idCity'] == cityUser.idCity) {
+            final ratesCollection = await it.reference
+                .collection('rates')
+                .where('time', isGreaterThanOrEqualTo: initial)
+                .where('time', isLessThanOrEqualTo: last)
+                .get();
+            final ratesList = <RatesModel>[];
 
-          for (final rate in ratesCollection.docs) {
-            final rateModel = RatesModel.fromMap(rate.data());
-            ratesList.add(rateModel);
+            for (final rate in ratesCollection.docs) {
+              final rateModel = RatesModel.fromMap(rate.data());
+              ratesList.add(rateModel);
+            }
+
+            final rates = await calculateAverage(ratesList);
+
+            final company = CooperativeModel(
+              idCooperative: it.id,
+              name: it['name'],
+              idCity: it['idCity'],
+              rates: rates,
+              color:
+                  Colors.primaries[Random().nextInt(Colors.primaries.length)],
+            );
+
+            list.add(company);
           }
-
-          final rates = await calculateAverage(ratesList);
-
-          final company = CooperativeModel(
-            idCooperative: item.id,
-            name: item['name'],
-            idCity: item['idCity'],
-            rates: rates,
-            color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
-          );
-
-          cooperativesList.add(company);
         }
       }
     }
+
+    cooperativesList.clear();
+    cooperativesList.addAll(list);
   }
 
-  Future<void> _getThirdManagerCompanies(int index) async {
-    final idCompany = companyUser;
-    final cooperativeId =
-        await db.collection('cooperatives').doc(idCompany).get();
+  Future<void> _getThirdManagerCompaniesFilter(
+    DocumentSnapshot<Map<String, dynamic>> cooperativeId,
+    DateTime? initial,
+    DateTime? last,
+  ) async {
+    final ratesCollection = await cooperativeId.reference
+        .collection('rates')
+        .where('time', isGreaterThanOrEqualTo: initial)
+        .where('time', isLessThanOrEqualTo: last)
+        .get();
 
-    final ratesCollection =
-        await cooperativeId.reference.collection('rates').get();
     final ratesList = <RatesModel>[];
 
     for (final rate in ratesCollection.docs) {
@@ -238,6 +202,7 @@ class DataBaseController {
     );
 
     cooperativesList.add(company);
+
   }
 
   ///Função que pega especificamente uma cooperativa
@@ -253,7 +218,6 @@ class DataBaseController {
     }
     final rates = await calculateAverage(ratesList);
 
-
     final company = CooperativeModel(
       idCooperative: cooperativeId.id,
       name: cooperativeId['name'],
@@ -265,46 +229,107 @@ class DataBaseController {
     return [company];
   }
 
-  ///Pega as cooperativas por data
-  Future<List<CooperativeModel>> getCooperativesByDate(
+  Future<void> _getFilter({
+    required QuerySnapshot<Map<String, dynamic>> item,
     DateTime? initial,
     DateTime? last,
     String? id,
-  ) async {
-    final cooperativesByDate = <CooperativeModel>[];
+  }) async {
+    for (final item in item.docs) {
+      await _processCooperative(
+        item,
+        initial,
+        last,
+      );
+    }
+  }
+
+  ///Pega as cooperativas por data
+  Future<List<CooperativeModel>> getCooperativesByDate({
+    DateTime? initial,
+    DateTime? last,
+    String? id,
+  }) async {
+    cooperativesList.clear();
 
     if (id == null || id.isEmpty) {
       final cooperativesCollection = await db.collection('cooperatives').get();
 
-      for (final item in cooperativesCollection.docs) {
-        await _processCooperative(
-          item,
-          initial,
-          last,
-          cooperativesByDate,
-        );
-      }
+      await _get(
+        cooperativesCollection,
+        initial,
+        last,
+        id,
+      );
     } else {
-      final cooperativeById = await db.collection('cooperatives').doc(id).get();
+      final cooperativeId = await db
+          .collection(
+            'cooperatives',
+          )
+          .doc(
+            id,
+          )
+          .get();
 
-      if (cooperativeById.exists) {
-        await _processCooperative(
-          cooperativeById,
-          initial,
-          last,
-          cooperativesByDate,
-        );
-      }
+      await _getThirdManagerCompaniesFilter(
+        cooperativeId,
+        initial,
+        last,
+      );
     }
 
-    return cooperativesByDate;
+    return cooperativesList;
+  }
+
+  Future<void> _get(
+    QuerySnapshot<Map<String, dynamic>> item,
+    DateTime? initial,
+    DateTime? last,
+    String? id,
+  ) async {
+    switch (_user.position) {
+      case 1:
+        await _getFilter(
+          last: last,
+          item: item,
+          initial: initial,
+          id: id,
+        );
+
+        break;
+      case 2:
+        await _getSecondManagerCompaniesFilter(
+          last: last,
+          item: item,
+          initial: initial,
+          id: id,
+        );
+        break;
+      case 3:
+        final idCompany = companyUser;
+
+        final cooperativeId = await db
+            .collection(
+              'cooperatives',
+            )
+            .doc(
+              idCompany,
+            )
+            .get();
+
+        await _getThirdManagerCompaniesFilter(
+          cooperativeId,
+          initial,
+          last,
+        );
+        break;
+    }
   }
 
   Future<void> _processCooperative(
     DocumentSnapshot<Map<String, dynamic>> item,
     DateTime? initial,
     DateTime? last,
-    List<CooperativeModel> cooperativesByDate,
   ) async {
     final dbCooperatives = item.reference.collection('rates');
 
@@ -322,13 +347,15 @@ class DataBaseController {
 
       final rates = await calculateAverage(ratesList);
 
-      cooperativesByDate.add(CooperativeModel(
-        idCooperative: item.id,
-        name: item['name'],
-        idCity: item['idCity'],
-        rates: rates,
-        color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
-      ));
+      cooperativesList.add(
+        CooperativeModel(
+          idCooperative: item.id,
+          name: item['name'],
+          idCity: item['idCity'],
+          rates: rates,
+          color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+        ),
+      );
     }
   }
 }

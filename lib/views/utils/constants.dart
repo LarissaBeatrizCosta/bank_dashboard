@@ -19,7 +19,7 @@ DateTime? tryParseDate(String template, String? date) {
 
   try {
     return DateFormat(template).parseStrict(date);
-  } on FormatException catch (e, stack) {
+  } on FormatException {
     return null;
   }
 }
@@ -33,7 +33,7 @@ String? tryFormatDate(String template, DateTime? date) {
 
   try {
     return DateFormat(template).format(date);
-  } on FormatException catch (e, stack) {
+  } on FormatException {
     return null;
   }
 }
