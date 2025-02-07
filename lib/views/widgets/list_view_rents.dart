@@ -94,13 +94,7 @@ class _BuilderList extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
                         elevation: 4,
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.all(16.0),
-                          leading: Icon(
-                            Icons.comment,
-                            color: Color(0xFFFFB703),
-                            size: 30,
-                          ),
+                        child: ExpansionTile(
                           title: Text(
                             cooperatives.commentValue.isNotEmpty
                                 ? cooperatives.commentValue
@@ -113,8 +107,15 @@ class _BuilderList extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
+                          leading: Icon(
+                            Icons.comment,
+                            color: Color(0xFFFFB703),
+                            size: 30,
+                          ),
                           subtitle: Text(
-                            cooperatives.cpfValue,
+                            cooperatives.cpfValue.isNotEmpty
+                                ? cooperatives.cpfValue
+                                : 'Sem CPF disponível',
                             style: TextStyle(
                               fontSize: 12,
                               color: Color(0xFF5C8001),
@@ -125,12 +126,57 @@ class _BuilderList extends StatelessWidget {
                             color: Color(0xFF5C8001),
                             size: 24,
                           ),
+                          children: [
+                            _Expanded(
+                              text:
+                                  'Colaborador: ${cooperatives.collaboratorValue}',
+                              icon: Icons.person,
+                            ),
+                            _Expanded(
+                              text:
+                                  'Localização: ${cooperatives.locationValue}',
+                              icon: Icons.location_on,
+                            ),
+                            _Expanded(
+                              icon: Icons.star,
+                              text: 'Indicação: ${cooperatives.numberRate}',
+                            ),
+                            _Expanded(
+                              icon: Icons.access_time,
+                              text:
+                                  'Tempo de espera: ${cooperatives.timeValue}',
+                            ),
+                          ],
                         ),
                       );
                     },
                   );
           },
         ),
+      ),
+    );
+  }
+}
+
+class _Expanded extends StatelessWidget {
+  const _Expanded({required this.text, required this.icon});
+
+  final String text;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Icon(icon, color: Color(0xFFFFB703), size: 20),
+          SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
       ),
     );
   }
