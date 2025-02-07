@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -95,8 +97,8 @@ List<PieChartSectionData> pieChart() {
     5,
     (i) {
       double value = 10;
-      var title = 'teste';
-      var color = ColorsHome.colorMap[16];
+      var title = '${i + 1} ';
+      var color = Colors.primaries[Random().nextInt(Colors.primaries.length)];
       return PieChartSectionData(
         value: value,
         title: title,

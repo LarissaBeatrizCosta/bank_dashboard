@@ -5,15 +5,22 @@ import '../../controllers/dashboard_bar_graph_controller.dart';
 import '../utils/colors.dart';
 import '../utils/container_background.dart';
 
-///ListView das 10 avaliações recentes
+/// ListView das 10 avaliações recentes
 class ListViewRents extends StatelessWidget {
-  ///Construtor
+  /// Construtor
   const ListViewRents({super.key});
 
   @override
   Widget build(BuildContext context) {
     final text = 'Avaliações Recentes';
     final icon = Icons.list;
+
+    final state = Provider.of<DashboardState>(context, listen: false);
+
+    if (state.rateList.isEmpty) {
+      state.getRates();
+    }
+
     return ContainerBackground(
       heightValueDesktop: 0.65,
       heightValueMobile: 0.45,
@@ -63,7 +70,7 @@ class _BuilderList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = Provider.of<DashboardState>(context, listen: false);
+    final state = Provider.of<DashboardState>(context);
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     var availableWidth = screenWidth - 40;
@@ -72,31 +79,34 @@ class _BuilderList extends StatelessWidget {
       padding: const EdgeInsets.only(top: 30),
       child: SizedBox(
         height: (screenWidth > 600 ? screenHeight * 0.5 : screenHeight * 0.35),
-        width: (screenWidth > 600 ? availableWidth * 1 : availableWidth * 1),
+        width: availableWidth,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return ListView.builder(
-              itemCount: state.rateList.length,
-              itemBuilder: (context, index) {
-                final cooperatives = state.rateList[index];
-                return Card(
-                  color: Colors.white,
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 16.0),
-                  elevation: 4,
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(16.0),
-                    title: Text(
-                      cooperatives.cpfValue,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
+            return state.rateList.isEmpty
+                ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: state.rateList.length,
+                    itemBuilder: (context, index) {
+                      final cooperatives = state.rateList[index];
+                      return Card(
+                        color: Colors.white,
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16.0),
+                        elevation: 4,
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(16.0),
+                          title: Text(
+                            cooperatives.cpfValue,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
           },
         ),
       ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 
 import '../models/cooperative_model.dart';
@@ -17,6 +19,11 @@ class DashboardState extends ChangeNotifier {
   var _isLoading = true;
   final _companies = <CooperativeModel>[];
   final _mainsCompanies = <CooperativeModel>[];
+
+  late List<RatesModel> _rateList = [];
+
+  ///Lista de notas
+  List<RatesModel> get rateList => _rateList;
 
   ///Data inicial do calendario
   DateTime? initial;
@@ -151,14 +158,24 @@ class DashboardState extends ChangeNotifier {
     notifyListeners();
   }
 
-  late List<RatesModel> _rateList = [];
-
-  ///Lista de notas
-  List<RatesModel> get rateList => _rateList;
-
   ///Pega as notas
-  Future<void> getRates(String id) async {
-    _rateList = await _dbController.ratesList(id);
+  Future<void> getRates() async {
+    try {
+      var tempRateList = <RatesModel>[];
+
+      for (final item in companies) {
+        final result = await _dbController.ratesList(item.idCooperative);
+
+        if (result.isNotEmpty) {
+          tempRateList.addAll(result);
+        }
+      }
+
+      _rateList = tempRateList;
+    } catch (e) {
+      Exception(e);
+    }
+
     notifyListeners();
   }
 }
