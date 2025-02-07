@@ -35,15 +35,13 @@ class DashboardState extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   ///Data selecionada
-  String? get initialDate =>
-      tryFormatDate(
+  String? get initialDate => tryFormatDate(
         'dd/MM/yyyy',
         initial,
       );
 
   ///Data selecionada
-  String? get lastDate =>
-      tryFormatDate(
+  String? get lastDate => tryFormatDate(
         'dd/MM/yyyy',
         last,
       );
@@ -132,13 +130,11 @@ class DashboardState extends ChangeNotifier {
   Future<void> getCooperativeFilter({
     String? id,
   }) async {
-
-    if(id != null){
-    if (_selectedCompany?.idCooperative == id) {
-      return;
+    if (id != null) {
+      if (_selectedCompany?.idCooperative == id) {
+        return;
+      }
     }
-    }
-
     _companies.clear();
 
     var list = <CooperativeModel>[];
