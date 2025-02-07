@@ -72,7 +72,7 @@ class _BuilderList extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 30),
       child: SizedBox(
-        height: (screenWidth > 600 ? screenHeight * 0.6 : screenHeight * 0.35),
+        height: (screenWidth > 600 ? screenHeight * 0.5 : screenHeight * 0.35),
         width: (screenWidth > 600 ? availableWidth * 1 : availableWidth * 1),
         child: LayoutBuilder(
           builder: (context, constraints) {

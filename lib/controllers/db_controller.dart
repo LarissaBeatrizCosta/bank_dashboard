@@ -202,7 +202,6 @@ class DataBaseController {
     );
 
     cooperativesList.add(company);
-
   }
 
   ///Função que pega especificamente uma cooperativa
@@ -308,14 +307,8 @@ class DataBaseController {
       case 3:
         final idCompany = companyUser;
 
-        final cooperativeId = await db
-            .collection(
-              'cooperatives',
-            )
-            .doc(
-              idCompany,
-            )
-            .get();
+        final cooperativeId =
+            await db.collection('cooperatives').doc(idCompany).get();
 
         await _getThirdManagerCompaniesFilter(
           cooperativeId,
