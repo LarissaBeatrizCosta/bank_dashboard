@@ -85,9 +85,10 @@ class _BuilderList extends StatelessWidget {
             return state.rateList.isEmpty
                 ? Center(child: CircularProgressIndicator())
                 : ListView.builder(
-                    itemCount: state.rateList.length,
+                    itemCount: state.rateList.take(10).length,
                     itemBuilder: (context, index) {
-                      final cooperatives = state.rateList[index];
+                      final cooperatives =
+                          state.rateList.take(10).toList()[index];
                       return Card(
                         color: Colors.white,
                         margin: const EdgeInsets.symmetric(
@@ -95,13 +96,34 @@ class _BuilderList extends StatelessWidget {
                         elevation: 4,
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(16.0),
+                          leading: Icon(
+                            Icons.comment,
+                            color: Color(0xFFFFB703),
+                            size: 30,
+                          ),
                           title: Text(
-                            cooperatives.cpfValue,
+                            cooperatives.commentValue.isNotEmpty
+                                ? cooperatives.commentValue
+                                : 'Sem comentário disponível',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(
+                            cooperatives.cpfValue,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Color(0xFF5C8001),
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_drop_down_circle_outlined,
+                            color: Color(0xFF5C8001),
+                            size: 24,
                           ),
                         ),
                       );
