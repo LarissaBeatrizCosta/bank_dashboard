@@ -36,6 +36,8 @@ class _Graph extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
     final color = ColorsHome.colorMap[15];
+    final sections = pieChart();
+
     return Column(
       children: [
         Padding(
@@ -46,17 +48,14 @@ class _Graph extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Icon(icon, color: color),
               ),
-              Text(
-                text,
-                style: style,
-              ),
+              Text(text, style: style),
             ],
           ),
         ),
-        _BuilderGraph(),
+        _BuilderGraph(sections: sections),
         Padding(
           padding: const EdgeInsets.only(top: 60),
-          child: Text('Legenda'),
+          child: _Legend(sections: sections),
         ),
       ],
     );
@@ -64,7 +63,9 @@ class _Graph extends StatelessWidget {
 }
 
 class _BuilderGraph extends StatelessWidget {
-  const _BuilderGraph();
+  const _BuilderGraph({required this.sections});
+
+  final List<PieChartSectionData> sections;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,7 @@ class _BuilderGraph extends StatelessWidget {
           builder: (context, constraints) {
             return PieChart(
               PieChartData(
-                sections: pieChart(),
+                sections: sections,
               ),
             );
           },
@@ -91,23 +92,75 @@ class _BuilderGraph extends StatelessWidget {
   }
 }
 
-///Pedaços do grafico
+/// Pedaços do gráfico
 List<PieChartSectionData> pieChart() {
   return List.generate(
-    5,
+    11,
     (i) {
       double value = 10;
-      var title = '${i + 1} ';
+      var title = '${(i - 1) + 1} ';
       var color = Colors.primaries[Random().nextInt(Colors.primaries.length)];
+
       return PieChartSectionData(
         value: value,
         title: title,
         color: color,
         titleStyle: TextStyle(
-          color: ColorsHome.colorMap[11],
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
         ),
         radius: 50,
       );
     },
   );
+}
+
+class _Legend extends StatelessWidget {
+  const _Legend({required this.sections});
+
+  final List<PieChartSectionData> sections;
+
+  @override
+  Widget build(BuildContext context) {
+    final middleIndex = (sections.length / 2).ceil();
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:
+              sections.sublist(0, middleIndex).map(_buildLegendItem).toList(),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:
+              sections.sublist(middleIndex).map(_buildLegendItem).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLegendItem(PieChartSectionData section) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      child: Row(
+        children: [
+          Container(
+            width: 12,
+            height: 12,
+            decoration: BoxDecoration(
+              color: section.color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            section.title,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
 }
