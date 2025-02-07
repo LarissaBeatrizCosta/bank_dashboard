@@ -2,18 +2,28 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import '../models/cooperative_model.dart';
+import '../views/utils/constants.dart';
+import '../views/utils/constants.dart';
 import 'db_controller.dart';
 
 ///Controller do grafico de barras
 class DashboardState extends ChangeNotifier {
   ///Construtor
-  DashboardState() {
+  DashboardState({
+    required DataBaseController dbController,
+  }) : _dbController = dbController {
     _init();
   }
 
   var _isLoading = true;
   final _companies = <CooperativeModel>[];
   final _mainsCompanies = <CooperativeModel>[];
+
+  ///Data inicial do calendario
+  DateTime? initial;
+
+  ///Data final do calendario
+  DateTime? last;
 
   ///Lista de filiais
   List<CooperativeModel> get companies => _companies;
@@ -24,8 +34,22 @@ class DashboardState extends ChangeNotifier {
   /// Carregamento da página
   bool get isLoading => _isLoading;
 
+  ///Data selecionada
+  String? get initialDate =>
+      tryFormatDate(
+        'dd/MM/yyyy',
+        initial,
+      );
+
+  ///Data selecionada
+  String? get lastDate =>
+      tryFormatDate(
+        'dd/MM/yyyy',
+        last,
+      );
+
   ///Inicialização do banco
-  DataBaseController dbController = DataBaseController();
+  final DataBaseController _dbController;
 
   CooperativeModel? _selectedCompany;
 
@@ -33,8 +57,7 @@ class DashboardState extends ChangeNotifier {
   CooperativeModel? get selectedCompany => _selectedCompany;
 
   Future<void> _init() async {
-    await dbController.getUser();
-    await getAllCompanies();
+    await getCooperativeFilter();
     _mainsCompanies.addAll(_companies);
 
     _isLoading = false;
@@ -43,7 +66,7 @@ class DashboardState extends ChangeNotifier {
 
   /// Get all companies
   Future<void> getAllCompanies() async {
-    final list = await dbController.getCooperatives();
+    final list = await _dbController.getCooperatives();
 
     _companies.clear();
     _companies.addAll(list);
@@ -63,7 +86,7 @@ class DashboardState extends ChangeNotifier {
       await getAllCompanies();
       return;
     }
-    final list = await dbController.getByIdCooperative(id);
+    final list = await _dbController.getByIdCooperative(id);
 
     _companies.addAll(list);
 
@@ -74,58 +97,61 @@ class DashboardState extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///Data selecionada
-  String initialDate = '';
-
-  ///Data selecionada
-  String lastDate = '';
-
-  ///Data inicial do calendario
-  DateTime? inial;
-
-  ///Data final do calendario
-  DateTime? last = DateTime(23, 59, 59);
-
-  ///Recupera a data selecionada
-  Future<void> getDate(int num, DateTime? date) async {
-    var formattedDate = DateFormat('dd/MM/yyyy').format(
-      date ?? DateTime.now(),
-    );
-    switch (num) {
-      case 1:
-        inial = date;
-        initialDate = formattedDate;
-      case 2:
-        if (date != null) {
-          last = DateTime(date.year, date.month, date.day, 23, 59, 59, 999);
-        }
-        lastDate = formattedDate;
-      default:
-        '';
+  // DOCUMENTAR
+  Future<void> getStartDate(DateTime? date) async {
+    if (initial == date) {
+      return;
     }
 
-    notifyListeners();
+    initial = date;
+    getCooperativeFilter();
+  }
+
+  // DOCUMENTAR
+  Future<void> getEndDate(DateTime? date) async {
+    if (initial == date) {
+      return;
+    }
+
+    final addDate = date?.add(
+      Duration(
+        days: 1,
+      ),
+    );
+
+    last = addDate?.subtract(
+      Duration(
+        microseconds: 1,
+      ),
+    );
+
+    getCooperativeFilter();
   }
 
   ///Pega a função do banco de pegar as cooperativas por data
-  Future<void> getCooperativeDate(String? id) async {
-    _companies.clear();
-    if (id == null || id.isEmpty) {
-      if (inial != null && last != null) {
-        await dbController.getCooperativesByDate(
-            inial as DateTime, last as DateTime, null);
-      }
+  Future<void> getCooperativeFilter({
+    String? id,
+  }) async {
+
+    if(id != null){
+    if (_selectedCompany?.idCooperative == id) {
       return;
     }
-    var list = <CooperativeModel>[];
-    if (inial != null && last != null) {
-      list = await dbController.getCooperativesByDate(
-          inial as DateTime, last as DateTime, id);
     }
-    // _companies.add(list);
-    // if (list.isNotEmpty) {
-    //   _selectedCompany = list.first;
-    // }
+
+    _companies.clear();
+
+    var list = <CooperativeModel>[];
+    list = await _dbController.getCooperativesByDate(
+      initial,
+      last,
+      id,
+    );
+    _companies.addAll(list);
+
+    if ((id ?? '').isNotEmpty) {
+      _selectedCompany = list.first;
+    }
 
     notifyListeners();
   }

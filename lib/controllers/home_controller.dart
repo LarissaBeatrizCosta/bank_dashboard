@@ -31,10 +31,16 @@ class HomeController extends ChangeNotifier {
 
   ///Pega o usuário
   Future<void> getUser() async {
-    final prefs = await SharedPreferences.getInstance();
-
     await dbController.getUser();
-     _userName = dbController.nameUser;
-     prefs.setString(Constants.userName, _userName);
+
+    if (!dbController.initialized) {
+      return;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    _userName = dbController.nameUser;
+    prefs.setString(Constants.userName, _userName);
+    notifyListeners();
+
   }
 }

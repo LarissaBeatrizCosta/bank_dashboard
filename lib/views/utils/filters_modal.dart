@@ -88,8 +88,9 @@ class _ContentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<DashboardState>(context);
-    var initialDate = state.initialDate;
-    var lastDate = state.lastDate;
+    final initialDate = state.initialDate;
+    final lastDate = state.lastDate;
+
     final style = TextStyle(
       color: Colors.black,
       fontSize: 16,
@@ -122,20 +123,30 @@ class _ContentDialog extends StatelessWidget {
                 ),
             ],
             onChange: (item) {
-              state.getCooperativeId(item);
+              state.getCooperativeFilter(id: item);
             },
           ),
           DatePickerButton(
+            initialDate: state.initial ,
+            lastDate: state.last ??  DateTime(2030),
+            firstDate: DateTime(2000),
             onDateSelected: (date) {
-              state.getDate(1, date);
+              state.getStartDate(date);
             },
-            text: 'Data inicial: $initialDate',
+            text: initialDate == null
+                ? 'Selecione uma data inicial'
+                : 'Data inicial: $initialDate',
           ),
           DatePickerButton(
+            initialDate: state.last,
+            firstDate: state.initial ?? DateTime(2000),
+            lastDate: DateTime(2030),
             onDateSelected: (date) {
-              state.getDate(2, date);
+              state.getEndDate(date);
             },
-            text: 'Data Final: $lastDate',
+            text: lastDate == null
+                ? 'Selecione uma data final'
+                : 'Data final: $lastDate',
           ),
         ],
       ),
@@ -145,27 +156,36 @@ class _ContentDialog extends StatelessWidget {
 
 ///Calendário
 class DatePickerButton extends StatelessWidget {
+  /// Construtor
+  const DatePickerButton({
+    required this.onDateSelected,
+    required this.text,
+    required this.initialDate,
+    this.firstDate,
+    this.lastDate,
+    super.key,
+  });
+
   /// Callback para quando a data for selecionada
   final Function(DateTime?) onDateSelected;
 
   /// Texto do botão
   final String text;
 
-  /// Construtor
-  const DatePickerButton({
-    required this.onDateSelected,
-    required this.text,
-    super.key,
-  });
+  // Documentar
+  final DateTime? initialDate;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
 
   /// Método para exibir o DatePicker
   Future<void> _selectDate(BuildContext context) async {
     var selectedDate = await showDatePicker(
       context: context,
       currentDate: DateTime.now(),
-      firstDate: DateTime(2025),
-      lastDate: DateTime(2030),
+      firstDate: firstDate ?? DateTime(2025),
+      lastDate: lastDate ?? DateTime(2030),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
+      initialDate: initialDate,
     );
 
     onDateSelected(selectedDate);

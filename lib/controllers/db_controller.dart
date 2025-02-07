@@ -9,41 +9,49 @@ import '../models/city_per_user.dart';
 import '../models/cooperative_model.dart';
 import '../models/rates_model.dart';
 import '../models/user_model.dart';
-import '../views/utils/colors.dart';
 
 ///Classe que cuida do banco de dados
 class DataBaseController {
   ///Instancia do banco
   FirebaseFirestore db = FirebaseFirestore.instance;
 
+  // Documentar
+  var initialized = false;
+
   ///Gerente
-  late UserModel user;
+  late final UserModel _user;
 
   ///Nome do gerente
-  String get nameUser => user.name;
+  String get nameUser => _user.name;
 
   ///Filial do gerente
-  String get companyUser => user.idCompany;
+  String get companyUser => _user.idCompany;
 
   ///Tipo do gerente
-  late final positionUser = user.position;
+  late final positionUser = _user.position;
 
   ///Lista de cooperativas
   final cooperativesList = <CooperativeModel>[];
 
   ///Pega id do login
-  Future<String> getUid() async {
+  Future<String?> getUid() async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      return 'Usuário sem id válido';
+      return null;
     }
+
     return user.uid;
   }
 
   ///Retorna o gerente ligado a este id
   Future<void> getUser() async {
     final userUid = await getUid();
+
+    if (userUid == null) {
+      return;
+    }
+
     final users = await db.collection('user').get();
     for (final item in users.docs) {
       if (item.id == userUid) {
@@ -59,7 +67,8 @@ class DataBaseController {
     final userId = await db.collection('user').doc(id).get();
 
     if (userId.exists && userId.data() != null) {
-      user = UserModel.fromMap(userId.data() as Map<String, dynamic>);
+      _user = UserModel.fromMap(userId.data() as Map<String, dynamic>);
+      initialized = true;
     }
   }
 
@@ -119,7 +128,7 @@ class DataBaseController {
     final list = cooperativesCollection.docs;
 
     for (final (index, item) in list.indexed) {
-      switch (user.position) {
+      switch (_user.position) {
         case 1:
           await _getMainManagerCompanies(
             index,
@@ -159,7 +168,7 @@ class DataBaseController {
       name: item['name'],
       idCity: item['idCity'],
       rates: rates,
-      color: ColorsHome().colorBar[index] ?? Colors.grey,
+      color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
     );
 
     cooperativesList.add(company);
@@ -195,7 +204,7 @@ class DataBaseController {
             name: item['name'],
             idCity: item['idCity'],
             rates: rates,
-            color: ColorsHome().colorBar[index] ?? Colors.grey,
+            color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
           );
 
           cooperativesList.add(company);
@@ -225,7 +234,7 @@ class DataBaseController {
       name: cooperativeId['name'],
       idCity: cooperativeId['idCity'],
       rates: rates,
-      color: ColorsHome().colorBar[index] ?? Colors.grey,
+      color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
     );
 
     cooperativesList.add(company);
@@ -244,14 +253,13 @@ class DataBaseController {
     }
     final rates = await calculateAverage(ratesList);
 
-    final intValue = Random().nextInt(4);
 
     final company = CooperativeModel(
       idCooperative: cooperativeId.id,
       name: cooperativeId['name'],
       idCity: cooperativeId['idCity'],
       rates: rates,
-      color: ColorsHome().colorBar[intValue] ?? Color(0xFF023047),
+      color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
     );
 
     return [company];
@@ -259,21 +267,33 @@ class DataBaseController {
 
   ///Pega as cooperativas por data
   Future<List<CooperativeModel>> getCooperativesByDate(
-      DateTime initial, DateTime last, String? id) async {
+    DateTime? initial,
+    DateTime? last,
+    String? id,
+  ) async {
     final cooperativesByDate = <CooperativeModel>[];
 
     if (id == null || id.isEmpty) {
       final cooperativesCollection = await db.collection('cooperatives').get();
 
       for (final item in cooperativesCollection.docs) {
-        await _processCooperative(item, initial, last, cooperativesByDate);
+        await _processCooperative(
+          item,
+          initial,
+          last,
+          cooperativesByDate,
+        );
       }
     } else {
       final cooperativeById = await db.collection('cooperatives').doc(id).get();
 
       if (cooperativeById.exists) {
         await _processCooperative(
-            cooperativeById, initial, last, cooperativesByDate);
+          cooperativeById,
+          initial,
+          last,
+          cooperativesByDate,
+        );
       }
     }
 
@@ -281,15 +301,19 @@ class DataBaseController {
   }
 
   Future<void> _processCooperative(
-      DocumentSnapshot<Map<String, dynamic>> item,
-      DateTime initial,
-      DateTime last,
-      List<CooperativeModel> cooperativesByDate) async {
-    final ratesCollection = await item.reference
-        .collection('rates')
-        .where('time', isGreaterThanOrEqualTo: initial)
-        .where('time', isLessThanOrEqualTo: last)
-        .get();
+    DocumentSnapshot<Map<String, dynamic>> item,
+    DateTime? initial,
+    DateTime? last,
+    List<CooperativeModel> cooperativesByDate,
+  ) async {
+    final dbCooperatives = item.reference.collection('rates');
+
+    final ratesCollection = initial == null || last == null
+        ? await dbCooperatives.get()
+        : await dbCooperatives
+            .where('time', isGreaterThanOrEqualTo: initial)
+            .where('time', isLessThanOrEqualTo: last)
+            .get();
 
     if (ratesCollection.docs.isNotEmpty) {
       final ratesList = ratesCollection.docs
@@ -297,14 +321,13 @@ class DataBaseController {
           .toList();
 
       final rates = await calculateAverage(ratesList);
-      final intValue = Random().nextInt(4);
 
       cooperativesByDate.add(CooperativeModel(
         idCooperative: item.id,
         name: item['name'],
         idCity: item['idCity'],
         rates: rates,
-        color: ColorsHome().colorBar[intValue] ?? Color(0xFF023047),
+        color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       ));
     }
   }

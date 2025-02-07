@@ -23,21 +23,22 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   void initState() {
-    super.initState();
     _checkLoginStatus();
+    super.initState();
   }
 
   Future<void> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString(Constants.userKey);
 
-    if (token != null && token.isNotEmpty) {
+    if ((token ?? '').isNotEmpty) {
       Navigator.pushReplacementNamed(context, '/home');
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
+      return;
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -55,9 +56,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final providers = [EmailAuthProvider()];
-    final homeState =Provider.of<HomeController>(context);
-
-    homeState.getUser();
+    final homeState = Provider.of<HomeController>(context);
 
     return SignInScreen(
       sideBuilder: (context, constraints) {
@@ -77,7 +76,7 @@ class _Body extends StatelessWidget {
               return;
             }
             prefs.setString(Constants.userKey, token);
-            homeState.getUser();
+            await homeState.getUser();
             Navigator.pushReplacementNamed(context, '/home');
           },
         ),

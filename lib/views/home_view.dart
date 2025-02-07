@@ -25,7 +25,9 @@ class HomeView extends StatelessWidget {
     }
 
     return ChangeNotifierProvider<DashboardState>(
-      create: (context) => DashboardState(),
+      create: (context) => DashboardState(
+        dbController: state.dbController,
+      ),
       child: _Body(),
     );
   }
