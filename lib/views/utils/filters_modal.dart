@@ -172,9 +172,11 @@ class DatePickerButton extends StatelessWidget {
   /// Texto do botão
   final String text;
 
-  // Documentar
+  ///Data inicial
   final DateTime? initialDate;
+  ///Primeira data
   final DateTime? firstDate;
+  ///Data final
   final DateTime? lastDate;
 
   /// Método para exibir o DatePicker

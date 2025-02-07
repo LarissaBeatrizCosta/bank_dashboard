@@ -16,7 +16,7 @@ class ListViewRents extends StatelessWidget {
     final icon = Icons.list;
     return ContainerBackground(
       heightValueDesktop: 0.65,
-      heightValueMobile: 0.50,
+      heightValueMobile: 0.45,
       widthValueDesktop: 0.495,
       widthValueMobile: 1,
       margin: EdgeInsets.symmetric(vertical: 5),

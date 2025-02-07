@@ -16,7 +16,7 @@ class DataBaseController {
   ///Instancia do banco
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  // Documentar
+  ///Inicializa o user
   bool initialized = false;
 
   ///Gerente
@@ -261,14 +261,7 @@ class DataBaseController {
         id,
       );
     } else {
-      final cooperativeId = await db
-          .collection(
-            'cooperatives',
-          )
-          .doc(
-            id,
-          )
-          .get();
+      final cooperativeId = await db.collection('cooperatives').doc(id).get();
 
       await _getThirdManagerCompaniesFilter(
         cooperativeId,

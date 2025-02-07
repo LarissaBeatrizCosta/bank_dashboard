@@ -93,7 +93,7 @@ class DashboardState extends ChangeNotifier {
     notifyListeners();
   }
 
-  // DOCUMENTAR
+  ///Recurepa data inicial
   Future<void> getStartDate(DateTime? date) async {
     if (initial == date) {
       return;
@@ -103,7 +103,7 @@ class DashboardState extends ChangeNotifier {
     getCooperativeFilter();
   }
 
-  // DOCUMENTAR
+  ///Recurepa data final
   Future<void> getEndDate(DateTime? date) async {
     if (initial == date) {
       return;
