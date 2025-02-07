@@ -64,7 +64,6 @@ class _BuilderList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<DashboardState>(context, listen: false);
-
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     var availableWidth = screenWidth - 40;
@@ -77,9 +76,9 @@ class _BuilderList extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return ListView.builder(
-              itemCount: state.companies.length,
+              itemCount: state.rateList.length,
               itemBuilder: (context, index) {
-                final cooperatives = state.companies[index];
+                final cooperatives = state.rateList[index];
                 return Card(
                   color: Colors.white,
                   margin: const EdgeInsets.symmetric(
@@ -88,7 +87,7 @@ class _BuilderList extends StatelessWidget {
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(16.0),
                     title: Text(
-                      cooperatives.name,
+                      cooperatives.cpfValue,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,

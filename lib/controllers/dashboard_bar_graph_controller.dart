@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../models/cooperative_model.dart';
+import '../models/rates_model.dart';
 import '../views/utils/constants.dart';
 import 'db_controller.dart';
 
@@ -147,6 +148,17 @@ class DashboardState extends ChangeNotifier {
       _selectedCompany = list.first;
     }
 
+    notifyListeners();
+  }
+
+  late List<RatesModel> _rateList = [];
+
+  ///Lista de notas
+  List<RatesModel> get rateList => _rateList;
+
+  ///Pega as notas
+  Future<void> getRates(String id) async {
+    _rateList = await _dbController.ratesList(id);
     notifyListeners();
   }
 }

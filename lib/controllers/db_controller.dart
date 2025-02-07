@@ -73,6 +73,23 @@ class DataBaseController {
     }
   }
 
+  ///Recupera as notas
+  Future<List<RatesModel>> ratesList(String id) async {
+    final cooperativeId = await db.collection('cooperatives').doc(id).get();
+    final ratesCollection =
+        await cooperativeId.reference.collection('rates').get();
+    final ratesList = <RatesModel>[];
+
+    for (final rate in ratesCollection.docs) {
+      final rateModel = RatesModel.fromMap(rate.data());
+      ratesList.add(rateModel);
+    }
+    for (final item in ratesList){
+      print(item.toMap());
+    }
+    return ratesList;
+  }
+
   ///Calcula  média
   Future<List<BarModel>> calculateAverage(
     List<RatesModel> ratesList,
@@ -287,7 +304,6 @@ class DataBaseController {
           initial: initial,
           id: id,
         );
-
         break;
       case 2:
         await _getSecondManagerCompaniesFilter(
